@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+nav#nav1{ margin-top: 24px;}
+nav#nav1 > a{
+    background: #B9E1FF;
+    margin: 1px;
+    color: #000;
+    padding: 10px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-family:"Arial Black", Gadget, sans-serif;
+}
+
+nav#nav1 > a:hover{ background: #BBEA00;}
+nav#nav1 > a:active{ background: : #EEFFA8;}
+</style>
+
+<script>
+
+var notes = " ";
+
+var a = new Audio();
+a.src = "A.mp3";
+
+var as = new Audio();
+as.src = "AS.mp3";
+
+var b = new Audio();
+b.src = "B.mp3";
+
+var c = new Audio();
+c.src = "C.mp3";
+
+var cs = new Audio();
+cs.src = "CS.mp3";
+
+var d = new Audio();
+d.src = "D.mp3";
+
+var ds = new Audio();
+ds.src = "DS.mp3";
+
+var e = new Audio();
+e.src = "E.mp3";
+
+var f = new Audio();
+f.src = "F.mp3";
+
+var fs = new Audio();
+fs.src = "FS.mp3";
+
+var g = new Audio();
+g.src = "G.mp3";
+
+var gs = new Audio();
+gs.src = "GS.mp3";
+
+var a_note = {
+    name:"A",
+    tone: a
+};
+
+var as_note = {
+    name : "#A",
+    tone: as
+};
+var b_note = {
+    name : "B",
+    tone: b
+};
+var c_note = {
+    name : "C",
+    tone: c
+};
+var cs_note = {
+    name : "#C",
+    tone: cs
+};
+var d_note = {
+    name : "D",
+    tone: d,
+};
+var ds_note = {
+    name : "#D",
+    tone: d
+};
+
+var e_note = {
+    name : "E",
+    tone: e
+};
+var f_note = {
+    name : "F",
+    tone: f
+};
+var fs_note = {
+    name : "#F",
+    tone: fs
+};
+
+var g_note = {
+    name : "G",
+    tone: g
+};
+var gs_note = {
+    name : "#G",
+    tone: gs
+};
+
+function ex_note(note) {
+    note.tone.play();
+    notes = notes + " " + note.name;
+    window.alert(notes);
+
+}
+
+
+</script>
+</head>
+<body>
+	<nav id="nav1">
+        <a href="#" onmousedown="ex_note(a_note)"> A </a>
+        <a href="#" onmousedown="ex_note(as_note)"> A# </a>
+        <a href="#" onmousedown="ex_note(b_note)"> B </a>
+        <a href="#" onmousedown="ex_note(c_note)"> C </a>
+        <a href="#" onmousedown="ex_note(cs_note)"> C# </a>
+        <a href="#" onmousedown="ex_note(d_note)"> D </a>
+        <a href="#" onmousedown="ex_note(ds_note)"> D# </a>
+        <a href="#" onmousedown="ex_note(e_note)"> E </a>
+        <a href="#" onmousedown="ex_note(f_note)"> F </a>
+        <a href="#" onmousedown="ex_note(fs_note)"> F# </a>
+        <a href="#" onmousedown="ex_note(g_note)"> G </a>
+        <a href="#" onmousedown="ex_note(gs_note)"> G# </a>
+	</nav>
+
+
+
+
+</body>
+</html>
