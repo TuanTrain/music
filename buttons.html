@@ -17,9 +17,41 @@ nav#nav1 > a:hover{ background: #BBEA00;}
 nav#nav1 > a:active{ background: : #EEFFA8;}
 </style>
 
-<script>
+<script tyep="text/javascript">
 
 var notes = " ";
+
+document.onkeydown = function(event){
+    var key_press = String.fromCharCode(event.keyCode)
+    var key_code = event.keyCode 
+
+    document.getElementById('kp').innerHTML = key_press; 
+    document.getElementById('kc').innerHTML = key_code;
+
+    status.innerHTML = "Down Event Fired For: " + key_press;
+
+    var bleeps = new Array(8); 
+
+    for (var i = 0; i < bleeps.length; i++)
+    {
+        bleeps[i] = new Audio();
+        bleeps[i].src = (i+1) +'.mp3';
+    }
+
+    var keyPresses = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K'];
+
+    var index = keyPresses.indexOf(key_press);
+
+    if (index == -1)
+    {
+        document.getElementById('status').innerHTML = 'Only Press on the Second Row... ASDFGHJK';
+    }
+    else 
+    {
+        bleeps[index].play();
+    }
+
+}
 
 var a = new Audio();
 a.src = "A.mp3";
@@ -146,47 +178,7 @@ Key Code: <span id = "kc"> </span>
         <a href="#" onmousedown="ex_note(gs_note)"> G# </a>
 	</nav>
 
-    <script type="text/javascript">
-    document.onkeydown = function(event){
-    var key_press = String.fromCharCode(event.keyCode)
-    var key_code = event.keyCode 
 
-    document.getElementById('kp').innerHTML = key_press; 
-    document.getElementById('kc').innerHTML = key_code;
-
-    status.innerHTML = "Down Event Fired For: " + key_press;
-
-    var bleeps = new Array(8); 
-
-    for (var i = 0; i < bleeps.length; i++)
-    {
-        bleeps[i] = new Audio();
-        bleeps[i].src = (i+1) +'.mp3';
-    }
-
-    var keyPresses = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K'];
-
-    var index = keyPresses.indexOf(key_press);
-
-    if (index == -1)
-    {
-        document.getElementById('status').innerHTML = 'Only Press on the Second Row... ASDFGHJK';
-    }
-    else 
-    {
-        bleeps[index].play();
-    }
-
-}
-</script>
-
-<h2> Javascript Capture Keyboard Input </h2> 
-
-Key Pressed: <span id = "kp"> </span> 
-<br /> 
-Key Code: <span id = "kc"> </span>
-
-<p id = "status"> Keyboard Event Status </p>
 
 
 </body>
