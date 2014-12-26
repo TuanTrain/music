@@ -1,0 +1,12 @@
+{
+  "name": "tune-player",
+  "description": "Plays a Tune that you Write",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "~3.0.1",
+    "ejs": "~0.8.3"
+  }
+}

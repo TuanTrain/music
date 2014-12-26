@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html style="margin:10px">
+  <head>
+    <link rel="stylesheet" type="text/css" href="../public/bootstrap.css">
+
+  <!-- The following 'include' lets us play midi files from the browser 
+  Note: the <% // stuff %> is part of the ejs template. 
+  -->
+  <% include ../public/playmidi.js %> 
+
+  <!-- Our own Javascript goes here! -->
+  <script> 
+  
+  </script>
+  </head>
+  
+  <body>
+    <h1> Javascript Midi Player </h1> 
+
+    <p> Click the following to play audio: </p> 
+    <a href="javascript:void(play('../mid/test.mid'))"> Play </a>
+
+    <form method="post" action="generate">
+      <input type="text" style = "margin: 20px"
+                       class="col-md-12"
+                       name="pattern"
+                       placeholder="Enter a string of Notes here, separated by commas"
+                       />
+      </input> 
+    </form>
+  </body>
+
+</html>
