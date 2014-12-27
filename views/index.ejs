@@ -1,33 +1,141 @@
 <!DOCTYPE HTML>
 <html style="margin:10px">
-  <head>
-    <link rel="stylesheet" type="text/css" href="../public/bootstrap.css">
+    <head>
+        <link rel="stylesheet" type="text/css" href="../public/bootstrap.css">
 
-  <!-- The following 'include' lets us play midi files from the browser 
-  Note: the <% // stuff %> is part of the ejs template. 
-  -->
-  <% include ../public/playmidi.js %> 
+        <style type="text/css">
 
-  <!-- Our own Javascript goes here! -->
-  <script> 
-  
-  </script>
-  </head>
-  
-  <body>
-    <h1> Javascript Midi Player </h1> 
+        button
+        {
+        	margin:10px;
+        }
 
-    <p> Click the following to play audio: </p> 
-    <a href="javascript:void(play('../mid/test.mid'))"> Play </a>
+        body
+        {
+        	text-align: center;
+        	background-color: white;
+        	margin: 10px; 
+        }
 
-    <form method="post" action="generate">
-      <input type="text" style = "margin: 20px"
-                       class="col-md-12"
-                       name="pattern"
-                       placeholder="Enter a string of Notes here, separated by commas"
-                       />
-      </input> 
-    </form>
-  </body>
+        #content
+        {
+        	width:700px;
+			margin:0px auto;
+			padding:15px;
+			border:1px solid #eee;
+			background-color:#eee;
+        }
 
+        nav#nav1
+        { 
+            margin-top: 24px;
+        }
+            
+        nav#nav1 > a
+        {
+            background: #B9E1FF;
+            margin: 1px;
+            color: #000;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-family:"Arial Black", Gadget, sans-serif;
+        }
+
+        nav#nav1 > a:hover
+        { 
+            background: #BBEA00;
+        }
+
+        nav#nav1 > a:active
+        { 
+            background: : #EEFFA8;
+        }
+
+        </style>
+
+        <!-- The following 'include' lets us play midi files from the browser 
+        Note: the <% // stuff %> is part of the ejs template. -->
+
+        <% include ../public/playmidi.js %> 
+
+
+        <!-- Our own Javascript goes here! -->
+        <script> 
+
+        function play_note(note)
+        {
+            var audio = new Audio(); 
+            audio.src = '../mp3/' + note + '.mp3'; 
+            audio.play(); 
+        }
+
+        document.onkeydown = function(event){
+		    var key_press = String.fromCharCode(event.keyCode)
+		    var key_code = event.keyCode 
+
+		    var bleeps = new Array(8); 
+
+		    for (var i = 0; i < bleeps.length; i++)
+		    {
+		        bleeps[i] = new Audio();
+		        bleeps[i].src = (i+1) +'.mp3';
+		    }
+
+		    var notes = ['A', 'B', 'C', 'D', 'E', 'F', 'G']; 
+		    var keyPresses = ['A', 'S', 'D', 'F', 'G', 'H', 'J'];
+
+		    var index = keyPresses.indexOf(key_press);
+
+		    play_note(notes[index]); 
+		};
+
+        </script>
+    </head>
+
+    <body>
+    	<div id = "content">
+	    <p id = "status"> Keyboard for Playback Only</p>
+
+	    <nav>
+	        <% 
+	        var notes = ['A', 'B', 'C', 'D', 'E', 'F', 'G']; 
+
+	        var octave = 4; 
+
+	        for (var i = 0; i < notes.length; i++)
+	          {
+	            var name = notes[i] // + octave; 
+	        %>
+
+	          <button class="btn btn-default navbar-btn" onclick = "play_note('<%= name %>')"> <%= name %> </button>
+	        <% } %>
+	    </nav>  
+
+	    <p> <b> Keyboard Input </b> : keys A,S,D,F,G,H,J </p> 
+
+	    <h1> Javascript Midi Player </h1> 
+
+	    <p> Click the following to play audio: </p> 
+	    <a class="btn btn-primary" type = "button" href="javascript:void(play('../mid/test.mid'))"> Play! </a>
+
+
+	    <form method="post" action="generate">
+	        <input 	type="text" 
+	        		size = "30"
+	        		style = "margin: 15px"
+	             	name="pattern"
+	             	placeholder="Enter a string of Notes here, separated by commas"
+	                         />
+	        </input> <br/>
+	        <button class = "btn btn-success" type="submit"> 
+	        	Generate Midi
+	        </button>
+	    </form>
+
+	    <form method = "get" action="download">
+    		<button  class="btn btn-danger" type="submit" value="This is a button link"> Download </button>
+		</form>
+		</div> 
+ 	</body>
 </html>
