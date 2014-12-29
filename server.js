@@ -29,6 +29,11 @@ app.use('/jasmid', express.static('jasmid'));
 app.use('/public', express.static('public'));
 app.use('/mid', express.static('mid'));
 app.use('/mp3', express.static('mp3'));
+app.use('/js', express.static('js')); 
+app.use('/inc', express.static('inc')); 
+app.use('/soundfont', express.static('soundfont')); 
+app.use('/build', express.static('build')); 
+app.use('/generator', express.static('generator')); 
 
 // no clue
 app.use(express.bodyParser());
