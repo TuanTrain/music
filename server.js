@@ -32,8 +32,7 @@ app.use('/mp3', express.static('mp3'));
 app.use('/js', express.static('js')); 
 app.use('/inc', express.static('inc')); 
 app.use('/soundfont', express.static('soundfont')); 
-app.use('/build', express.static('build')); 
-app.use('/generator', express.static('generator')); 
+app.use('/', express.static('/'));
 
 // no clue
 app.use(express.bodyParser());
@@ -62,6 +61,28 @@ app.get('/download', function(req, res){
 app.get('/generate', function(req, res){
 	res.redirect('/'); 
 })
+
+
+/* 
+the following has been taken from MIDI.js > plugin.js so that key to note and note to key
+conversions may be easily done on the server 
+*/ 
+
+var keyToNote = {}; // C8  == 108
+var noteToKey = {}; // 108 ==  C8
+
+(function () {
+	var A0 = 0x15; // first note
+	var C8 = 0x6C; // last note
+	var number2key = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+	for (var n = A0; n <= C8; n++) {
+		var octave = (n - 12) / 12 >> 0;
+		var name = number2key[n % 12] + octave;
+		keyToNote[name] = n;
+		noteToKey[n] = name;
+	}
+})();
+
 
 // generates the midi file from a given pattern
 function generatePattern(pattern)
