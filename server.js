@@ -11,6 +11,9 @@ based on the user's input.
 var express = require('express');
 var app = express();
 
+// importing module 
+var generate = require('./play_multi_track.js');
+
 // saves files to server
 var fs = require('fs');
 
@@ -47,7 +50,7 @@ app.get('/', function (req, res) {
 // when the user POSTS to generate, generate the pattern, save it to the server, and 
 app.post('/generate', function(req, res){
  
-	generatePattern(req.body.pattern, req.body.harmony); 
+	generate(req.body.pattern, [req.body.harmony]); 
 	res.redirect('/')
 
 }); 

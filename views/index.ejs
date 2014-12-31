@@ -45,10 +45,10 @@
         
             MIDI.loadPlugin({
             soundfontUrl: "./soundfont/",
-            instruments: ["acoustic_grand_piano", "alto_sax"],
+            instruments: ["acoustic_grand_piano", "acoustic_grand_piano"],
             callback: function() {
         		MIDI.programChange(0, 0);	// lookup[instrument]
-        		MIDI.programChange(1, 65)
+        		MIDI.programChange(1, 0)
                 MIDI.Player.loadFile('./mid/test.mid', MIDI.Player.start); 
                }
         	});
