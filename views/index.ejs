@@ -8,14 +8,16 @@
         Note: the <% // stuff %> is part of the ejs template. the angle bracket 
         and percent sign will be read throughout the entire page, even in comments -->
 
-        <% include ../js/includes.js %>
-
+        <% include ../js/midiPlayer.js %>
 
         <!-- Our own Javascript goes here! -->
         <script> 
 
+        // Global Variables 
         var octave = 4; 
+        var duration = 128; // quarter note 
 
+        // Detect keyboard presses 
         document.onkeydown = function(event){
 		    var key_press = String.fromCharCode(event.keyCode)
 		    var key_code = event.keyCode 
@@ -32,7 +34,7 @@
 		    
 		};
 
-		// Plays a midi file 
+		// Plays the midi file (always test.mid)
         function playFile() {
 
         	var element = document.getElementById('instrument');
@@ -43,9 +45,10 @@
         
             MIDI.loadPlugin({
             soundfontUrl: "./soundfont/",
-            instrument: instrument,
+            instruments: ["acoustic_grand_piano", "alto_sax"],
             callback: function() {
-        		MIDI.programChange(0, lookup[instrument]);
+        		MIDI.programChange(0, 0);	// lookup[instrument]
+        		MIDI.programChange(1, 65)
                 MIDI.Player.loadFile('./mid/test.mid', MIDI.Player.start); 
                }
         	});
@@ -54,11 +57,11 @@
     	// Plays a note from mp3 library
         function playNote(note)
         {
-
         	var audio = new Audio(); 
         	audio.src = './mp3/' + note + octave + '.mp3'; 
         	audio.play(); 
-        	/* 
+
+        	/*
 			The following code can be used to dynamically generate the mp3's (as midi's), 
 			but it is terribly slow. There is a significant delay between pressing 
 			the button and hearing the piano sound. 
@@ -81,6 +84,7 @@
 			*/
 		}
 		
+		// Changes the global variable octave based on what is selected 
 		function changeOctave()
 		{
     		var e = document.getElementById('octave_selector');
@@ -92,19 +96,20 @@
     </head>
 
     <body>
-    	<div id = "content">
-	    <p id = "status"> Keyboard for Playback Only</p>
+    	<!-- for styling purposes only -->
+    	<div id = "content"> 
+
+	    <p id = "status"> Keyboard for Playback Only </p>
 
 	   	<div> 
 	    	<label id="select_octave"> Select an Octave:</label>
 		    <select class = "dropdown" id = "octave_selector" onchange="changeOctave();">
 				<option value="3">3</option>
-				<option value="4">4</option>
+				<option value="4" selected="selected">4</option>
 				<option value="5">5</option>
 				<option value="6">6</option>
 			</select>
 		</div>
-
 
 	    <nav id = "keyboard">
 	        <% 
@@ -112,8 +117,7 @@
 
 	        for (var i = 0; i < notes.length; i++)
 	          { 
-	        %>
-	          <button class="btn btn-default navbar-btn" onclick = "playNote('<%=notes[i]%>')"> <%= notes[i] %> </button>
+	        %> <button class="btn btn-default navbar-btn" onclick = "playNote('<%=notes[i]%>')"> <%= notes[i] %> </button>
 	        <% } %>
 	    </nav>  
 
@@ -141,12 +145,22 @@
 
 		<p id="input" > <b>Input Format:</b> noteOctave,duration noteOctave,duration ... </p>
 	    <form method="post" action="generate">
+	    	<label> Melody </label>
 	        <input 	type="text" 
 	        		size = "30"
 	        		style = "margin: 15px"
 	             	name="pattern"
 	             	placeholder="Enter a string of Notes here, separated by commas"
-                    value = "c4,128 c4,128, g4,128 g4,128 a4,128 a4,128 g4,128"
+                    value = "c4,128 c4,128, g4,128 g4,128 a4,128 a4,128 g4,256 f4,128 f4,128 e4,128 e4,128 d4,128 d4,128 c4,256"
+	                         />
+	        </input> <br/>
+	        <label> Harmony </label>
+	        <input 	type="text" 
+	        		size = "30"
+	        		style = "margin: 15px"
+	             	name="harmony"
+	             	placeholder="Enter a string of Notes here, separated by commas"
+                    value = "c4,128 c4,128, e4,128 e4,128 f4,128 f4,128 e4,256 d4,128 d4,128 c4,128 c4,128 b3,128 b3,128 c4,256"
 	                         />
 	        </input> <br/>
 	        <button class = "btn btn-success" type="submit"> 
@@ -155,8 +169,9 @@
 	    </form>
 
 	    <form method = "get" action="download">
-    		<button  class="btn btn-danger" type="submit" value="This is a button link"> Download </button>
+    		<button  class="btn btn-danger" type="submit"> Download </button>
 		</form>
+		
 		</div> 
  	</body>
 </html>

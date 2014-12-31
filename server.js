@@ -47,7 +47,7 @@ app.get('/', function (req, res) {
 // when the user POSTS to generate, generate the pattern, save it to the server, and 
 app.post('/generate', function(req, res){
  
-	generatePattern(req.body.pattern); 
+	generatePattern(req.body.pattern, req.body.harmony); 
 	res.redirect('/')
 
 }); 
@@ -85,7 +85,7 @@ var noteToKey = {}; // 108 ==  C8
 
 
 // generates the midi file from a given pattern
-function generatePattern(pattern)
+function generatePattern(pattern, harmony)
 {
 	// remove previous copy of the file 
 	if (generated)
@@ -101,8 +101,7 @@ function generatePattern(pattern)
 	file.addTrack(track);
 
 	pattern = pattern.split(' ');
-
-	console.log(pattern);
+	harmony = harmony.split(' ');
 
 	for (var i = 0; i < pattern.length; i++)
 	{
@@ -110,11 +109,26 @@ function generatePattern(pattern)
 		var note = pair[0]; 
 		var duration = pair[1]; 
 
-		console.log(note);
-		console.log(duration);
-
 		track.addNote(0, note, duration); 
+
+		var pair = harmony[i].split(',');
+		var note = pair[0]; 
+		var duration = pair[1]; 
+
+		track.addNote(1, note, duration); 
 	}
+
+	/*
+	for (var i = 0; i < harmony.length; i++)
+	{
+		var pair = harmony[i].split(',');
+		var note = pair[0]; 
+		var duration = pair[1]; 
+
+		track.addNote(1, note, duration); 
+	}
+	*/
+
 
 	fs.writeFileSync('./mid/test.mid', file.toBytes(), 'binary');
 	generated = true; 

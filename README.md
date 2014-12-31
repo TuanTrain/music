@@ -6,6 +6,6 @@ January 2015
 
 Uses the following : 
 <ul>
-<li> <a href='https://github.com/mudcube/MIDI.js/'> MIDI.js </a> - Allows for in-browser playback of midi files</li> 
-<li> <a href = 'https://www.npmjs.com/package/jsmidgen'> jsmidgen </a> - Generates .mid files on the server </li> 
+	<li> <a href='https://github.com/mudcube/MIDI.js/'> MIDI.js </a> - Allows for in-browser playback of midi files</li> 
+	<li> <a href = 'https://www.npmjs.com/package/jsmidgen'> jsmidgen </a> - Generates .mid files on the server </li> 
 </ul>
