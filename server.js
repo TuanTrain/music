@@ -21,7 +21,7 @@ var fs = require('fs');
 var Midi = require('jsmidgen');
 
 // let's us determine whether or not to delete the previous midi 
-var generated = false; 
+var isGenerated = false; 
 
 // sets the format of the rendered pages to ejs
 app.set('view engine', 'ejs');
@@ -44,7 +44,7 @@ app.use(app.router);
 // when the user GETs the homepage, render index(.ejs) 
 app.get('/', function (req, res) {
 
-  	res.render('index', { generated: false });
+  	res.render('index', { generated: isGenerated });
 });
 
 // when the user POSTS to generate, generate the pattern, save it to the server, and 
@@ -56,27 +56,33 @@ app.post('/generate', function(req, res){
 
  	 	generate(req.body.pattern, harmony); 
  	*/ 
+ 	var melody = req.body.pattern; 
+ 	var time = parseInt(req.body.time, 10);
 
+ 	// black box function that takes a (string, array of strings). Always saves the output as ./mid/test.mid 
 	generate(req.body.pattern, [req.body.harmony]); 
+	isGenerated = true; 
 	res.redirect('/');
 
 }); 
 
+// if the user GETS the download page, then send them the mid file 
 app.get('/download', function(req, res){
   	res.download('./mid/test.mid', 'yourMusic.mid');
   	// res.redirect('/');
 });
 
-// not sure if needed
+// if they (accidentally) go to /generate without POSTing, then redirect to home page 
 app.get('/generate', function(req, res){
 	res.redirect('/'); 
 })
 
-
 /*
 
-the following has been taken from MIDI.js > plugin.js so that key to note and note to key
+The following has been taken from MIDI.js > plugin.js so that key to note and note to key
 conversions may be easily done on the server 
+
+These conversions allow us to find notes that are a certain interval away from a given note. 
 
 */ 
 
@@ -143,9 +149,9 @@ function getChord(root, type)
 
 	var root_key = noteToKey[root];
 	
-	var second_key = root_key + (type == 'maj' || type = 'aug') ? 4 : 3; 
+	var second_key = root_key + (type == 'maj' || type == 'aug') ? 4 : 3; 
 	
-	var third_key = root_key + (type = 'dim') ? 6 : 7; 
+	var third_key = root_key + (type == 'dim') ? 6 : 7; 
 
 	if (type == 'aug')
 	{

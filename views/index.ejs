@@ -43,14 +43,18 @@
         	var instrument1 = element1.options[element1.selectedIndex].value; 
         	var instrument2 = element2.options[element2.selectedIndex].value; 
 
+        	// each instrument has a unquie number associated with it 
         	var lookup = {'alto_sax': 65, 'acoustic_grand_piano': 0, 'choir_aahs': 52};
         
             MIDI.loadPlugin({
             soundfontUrl: "./soundfont/",
             instruments: [ instrument2, instrument1],
             callback: function() {
+
+            	// we must set the program of the tracks to the instruments we've chosen 
         		MIDI.programChange(0, lookup[instrument2]);	// lookup[instrument]
         		MIDI.programChange(1, lookup[instrument1]);
+
                 MIDI.Player.loadFile('./mid/test.mid', MIDI.Player.start); 
                }
         	});
@@ -143,6 +147,12 @@
 			</select>
 		</div>
 
+		<% if (generated) { %>
+			<p> Something has been generated! Click Play! </p> 
+		<% } else {%> 
+			<p> Nothing has been generated yet :( </p>
+		<% } %>
+
 		<a class="btn btn-primary" type = "button" onclick="javascript:void(playFile())"> Play! </a>
 
 		<br/>
@@ -162,7 +172,13 @@
 	             	placeholder="Enter a string of Notes here, separated by commas"
                     value = "c4,128 c4,128, g4,128 g4,128 a4,128 a4,128 g4,256 f4,128 f4,128 e4,128 e4,128 d4,128 d4,128 c4,256"
 	                         />
-	        </input> <br/>
+	        </input> 
+	        <label>Beats per Measure</label>
+	        <select class = "dropdown" name = 'time'>
+		    	<option value="2"> 2</option>
+				<option value="3"> 3 </option>
+				<option value="4"> 4 </option>
+			</select> <br/>
 	        <label> Harmony </label>
 	        <input 	type="text" 
 	        		size = "30"
