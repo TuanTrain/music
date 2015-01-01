@@ -1,11 +1,11 @@
-/* 
+/***********************************************************************************************
 
 server.js  
 
 Creates a server which handles requests and generates an appropriate .mid file 
 based on the user's input. 
 
-*/
+***********************************************************************************************/
 
 // allows dynamic rendering of .ejs (embedded Javascript) pages
 var express = require('express');
@@ -49,14 +49,21 @@ app.get('/', function (req, res) {
 
 // when the user POSTS to generate, generate the pattern, save it to the server, and 
 app.post('/generate', function(req, res){
- 
+ 	/*
+ 	 	var chords = generateChords(req.body.pattern, req.body.time); 
+ 	    chords = parseChords(chords); 
+ 	 	var harmony = generate(req.body.pattern, chords);	
+
+ 	 	generate(req.body.pattern, harmony); 
+ 	*/ 
+
 	generate(req.body.pattern, [req.body.harmony]); 
-	res.redirect('/')
+	res.redirect('/');
 
 }); 
 
 app.get('/download', function(req, res){
-  	res.download('./mid/test.mid', 'yourMusic.mid'); // Set disposition and send it.
+  	res.download('./mid/test.mid', 'yourMusic.mid');
   	// res.redirect('/');
 });
 
@@ -66,9 +73,11 @@ app.get('/generate', function(req, res){
 })
 
 
-/* 
+/*
+
 the following has been taken from MIDI.js > plugin.js so that key to note and note to key
 conversions may be easily done on the server 
+
 */ 
 
 var keyToNote = {}; // C8  == 108
@@ -86,55 +95,64 @@ var noteToKey = {}; // 108 ==  C8
 	}
 })();
 
+/************************************
+TODO - generateChords (allows us to adjust the harmonization algorithm)
 
-// generates the midi file from a given pattern
-function generatePattern(pattern, harmony)
+Given a melody and a time signature (simply quarter notes per measure), return string 
+representing chords with duration (e.g. "c4maj,512 a4min,512 f4maj,512 g4maj,512")
+
+Please use the helper function getChord(root,type) written below to do this. 
+
+*************************************/
+function generateChords(melody, time)
 {
-	// remove previous copy of the file 
-	if (generated)
-	{
-		fs.unlink('./mid/test.mid', function(err){
-			if (err) throw err; 
-			console.log('removed previous'); 
-		});
-	}	
+	return false; 
+}
 
-	var file = new Midi.File();
-	var track = new Midi.Track();
-	file.addTrack(track);
 
-	pattern = pattern.split(' ');
-	harmony = harmony.split(' ');
+/************************************
+TODO - parseChords (allows us to adjust chords <-> waltz <-> folk...etc. )
 
-	for (var i = 0; i < pattern.length; i++)
-	{
-		var pair = pattern[i].split(',');
-		var note = pair[0]; 
-		var duration = pair[1]; 
+Given something like "c4maj,512 a4min,512 f4maj,512 g4maj,512", converts it to an array 
+of 3 separate string, with the first representing the top note...etc. 
 
-		track.addNote(0, note, duration); 
+For example, the middle string would be: 
 
-		var pair = harmony[i].split(',');
-		var note = pair[0]; 
-		var duration = pair[1]; 
+"e4,512 c5,512 a4,512 b4,512"
 
-		track.addNote(1, note, duration); 
-	}
+returns that array of 3 strings 
+************************************/
+function parseChords(chords)
+{
+	return false; 
+}
 
-	/*
-	for (var i = 0; i < harmony.length; i++)
-	{
-		var pair = harmony[i].split(',');
-		var note = pair[0]; 
-		var duration = pair[1]; 
 
-		track.addNote(1, note, duration); 
-	}
+/* 
+Given a root note and a type of chord, getchord(root,type) returns an array of length 3 with 
+the 3 notes in the chord. Currently supports only major, minor, diminished and augmented 
+*/ 
+function getChord(root, type)
+{
+	/* 
+	Maj 	Root 	4	Major Third 	3 	Fifth 
+	Min 	Root 	3   Minor Third 	4	Fifth 
+	Dim 	Root 	3 	Minor Third 	3 	Diminished Fifth 
+	Aug 	Root    4   Major Third     4   Augmented Fifth 
 	*/
 
+	var root_key = noteToKey[root];
+	
+	var second_key = root_key + (type == 'maj' || type = 'aug') ? 4 : 3; 
+	
+	var third_key = root_key + (type = 'dim') ? 6 : 7; 
 
-	fs.writeFileSync('./mid/test.mid', file.toBytes(), 'binary');
-	generated = true; 
+	if (type == 'aug')
+	{
+		third_key ++; 
+	} 
+
+	return [keyToNote[root_key], keyToNote[second_key], keyToNote[third_key]]; 
 }
 
 // listens at this particular port 

@@ -37,18 +37,20 @@
 		// Plays the midi file (always test.mid)
         function playFile() {
 
-        	var element = document.getElementById('instrument');
+        	var element1 = document.getElementById('melody_instrument');
+        	var element2 = document.getElementById('harmony_instrument');
 
-        	var instrument = element.options[element.selectedIndex].value; 
+        	var instrument1 = element1.options[element1.selectedIndex].value; 
+        	var instrument2 = element2.options[element2.selectedIndex].value; 
 
         	var lookup = {'alto_sax': 65, 'acoustic_grand_piano': 0, 'choir_aahs': 52};
         
             MIDI.loadPlugin({
             soundfontUrl: "./soundfont/",
-            instruments: ["acoustic_grand_piano", "acoustic_grand_piano"],
+            instruments: [ instrument2, instrument1],
             callback: function() {
-        		MIDI.programChange(0, 0);	// lookup[instrument]
-        		MIDI.programChange(1, 0)
+        		MIDI.programChange(0, lookup[instrument2]);	// lookup[instrument]
+        		MIDI.programChange(1, lookup[instrument1]);
                 MIDI.Player.loadFile('./mid/test.mid', MIDI.Player.start); 
                }
         	});
@@ -127,8 +129,14 @@
 
 	    <p> <b> Instructions: </b> Enter a melody in the text box below in the format and press the green Generate Midi button. Then, use the following to select an instrument and Play! </p> 
 	    <div id="instrument_selector"> 
-	    	<label id="select_instrument"> Select Instrument:</label>
-		    <select class = "dropdown" id = 'instrument'>
+	    	<label>  Melody Instrument:</label>
+		    <select class = "dropdown" id = 'melody_instrument'>
+		    	<option value="alto_sax">Antuan's Sax</option>
+				<option value="acoustic_grand_piano"> Andrew's Piano </option>
+				<option value="choir_aahs"> Evan's Voice </option>
+			</select>
+			<label> Harmony Instrument:</label>
+		    <select class = "dropdown" id = 'harmony_instrument'>
 		    	<option value="alto_sax">Antuan's Sax</option>
 				<option value="acoustic_grand_piano"> Andrew's Piano </option>
 				<option value="choir_aahs"> Evan's Voice </option>
@@ -142,6 +150,7 @@
 		<img src="../public/eighth_note.png" height = "45px"/> = 64 
 		<img src="../public/quarter_note.png"  height = "50px"/> = 128 
 		<img src="../public/half_note.png" height="50px" /> = 256
+		<img src="../public/quarter_rest.png" height="45px"/> = c9,128
 
 		<p id="input" > <b>Input Format:</b> noteOctave,duration noteOctave,duration ... </p>
 	    <form method="post" action="generate">
