@@ -1,8 +1,3 @@
-button
-{
-  margin:10px;
-}
-
 body
 {
   text-align: center;
@@ -12,41 +7,88 @@ body
 
 #content
 {
-  width:700px;
-margin:0px auto;
-padding:15px;
-border:1px solid #eee;
-background-color:#eee;
+    width:700px;
+    margin:0px auto;
+    padding:15px;
+    border:1px solid #eee;
+    background-color:#eee;
+    height: 1000px;
 }
 
-#input
+button
 {
-  margin: 10px 0px 0px 0px;
+    margin:10px;
 }
 
-nav#nav1
-{ 
-    margin-top: 24px;
+#midi{
+    position: absolute;
+    top:400px;
+    width: 700px;
 }
-    
-nav#nav1 > a
+
+/* for centering purposes only */
+#keyboard
 {
-    background: #B9E1FF;
-    margin: 1px;
-    color: #000;
-    padding: 10px;
-    text-decoration: none;
-    border-radius: 5px;
-    font-family:"Arial Black", Gadget, sans-serif;
+    margin-left:25px;
 }
 
-nav#nav1 > a:hover
-{ 
-    background: #BBEA00;
+/* allows us to re-use CSS for each octave */
+div.octave{
+    position:relative;
+    float:left;
 }
 
-nav#nav1 > a:active
-{ 
-    background: : #EEFFA8;
+/* note: position is relative, meaning each white key is added to the right of the previous */
+.white {
+    float: left;
+    width: 44px;
+    height: 230px;
+    background-color: #F4F4F4;
+    border: 1px solid #626262;
+    position: relative;
+    top: 0px;
+    border-radius: 0 0 15px 15px;
+}
+
+/* note: position is absolute, meaning we specify exactly the location of the black keys */
+div.black {
+    float: left;
+    width: 22px;
+    height: 160px;
+    background-color: #000000;
+    border-bottom: 2px solid #000;
+    border-left: 2px solid #000;
+    border-right: 2px solid #000;
+    position: absolute;
+    top: 206 px;
+    z-index: 100;
+    border-radius: 0 0 5px 5px;
+}
+
+/* spaces out the children according to where the black keys go on a piano */
+div.flats :nth-child(1) {
+    margin-left: 33.5px;
+}
+div.flats :nth-child(2) {
+    margin-left: 78.5px;
+}
+div.flats :nth-child(3) {
+    margin-left: 169px;
+}
+div.flats :nth-child(4) {
+    margin-left: 214px;
+}
+div.flats :nth-child(5) {
+    margin-left: 258.5px;
+}
+
+.small_img
+{
+    height:50px;
+}
+
+.large_img
+{
+    height:45px;
 }
 

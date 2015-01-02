@@ -1,6 +1,8 @@
 <!DOCTYPE HTML>
 <html style="margin:10px">
     <head>
+
+		<title> Musical Harmonizer </title>
         <link rel="stylesheet" type="text/css" href="../public/bootstrap.css">
         <link rel="stylesheet" type="text/css" href="../public/app.css">
 
@@ -105,98 +107,139 @@
     	<!-- for styling purposes only -->
     	<div id = "content"> 
 
-	    <p id = "status"> Keyboard for Playback Only </p>
+			<p id = "status"> Keyboard for Playback Only </p>
 
-	   	<div> 
-	    	<label id="select_octave"> Select an Octave:</label>
-		    <select class = "dropdown" id = "octave_selector" onchange="changeOctave();">
-				<option value="3">3</option>
-				<option value="4" selected="selected">4</option>
-				<option value="5">5</option>
-				<option value="6">6</option>
-			</select>
+			<div>
+				<label id="select_octave"> Select an Octave:</label>
+				<select class = "dropdown" id = "octave_selector" onchange="changeOctave();">
+					<option value="3">3</option>
+					<option value="4" selected="selected">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+				</select>
+			</div>
+
+			<nav id = "keys">
+				<%
+				var notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+
+				for (var i = 0; i < notes.length; i++)
+				  {
+				%> <button class="btn btn-default navbar-btn" onclick = "playNote('<%=notes[i]%>')"> <%= notes[i] %> </button>
+				<% } %>
+			</nav>
+
+			<p> <b> Keyboard Input: </b>keys A,S,D,F,G,H,J </p>
+			<div id="keyboard" class="center">
+				<div class="octave">
+					<div id="o4">
+						<div id="4C" class="key white">	</div>
+						<div id="4D" class="key white">	</div>
+						<div id="4E" class="key white">	</div>
+						<div id="4F" class="key white">	</div>
+						<div id="4G" class="key white">	</div>
+						<div id="4A" class="key white">	</div>
+						<div id="4B" class="key white">	</div>
+					</div>
+
+					<div class="flats">
+						<div id="4Cs" class="key black"> </div>
+						<div id="4Ds" class="key black"> </div>
+						<div id="4Fs" class="key black"> </div>
+						<div id="4Gs" class="key black"> </div>
+						<div id="4As" class="key black"> </div>
+					</div>
+				</div>
+				<div class="octave">
+					<div id="o5">
+						<div id="4C" class="key white">	</div>
+						<div id="4D" class="key white">	</div>
+						<div id="4E" class="key white">	</div>
+						<div id="4F" class="key white">	</div>
+						<div id="4G" class="key white">	</div>
+						<div id="4A" class="key white">	</div>
+						<div id="4B" class="key white">	</div>
+					</div>
+
+					<div class="flats">
+						<div id="4Cs" class="key black"> </div>
+						<div id="4Ds" class="key black"> </div>
+						<div id="4Fs" class="key black"> </div>
+						<div id="4Gs" class="key black"> </div>
+						<div id="4As" class="key black"> </div>
+					</div>
+				</div>
+			</div>
+			<br/>
+			<div id="midi">
+				<h1> Javascript Midi Player </h1>
+
+				<p> <b> Instructions: </b> Enter a melody in the text box below in the format and press the green Generate Midi button. Then, use the following to select an instrument and Play! </p>
+				<div id="instrument_selector">
+					<label>  Melody Instrument:</label>
+					<select class = "dropdown" id = 'melody_instrument'>
+						<option value="alto_sax">Antuan's Sax</option>
+						<option value="acoustic_grand_piano"> Andrew's Piano </option>
+						<option value="choir_aahs"> Evan's Voice </option>
+					</select>
+					<label> Harmony Instrument:</label>
+					<select class = "dropdown" id = 'harmony_instrument'>
+						<option value="alto_sax">Antuan's Sax</option>
+						<option value="acoustic_grand_piano"> Andrew's Piano </option>
+						<option value="choir_aahs"> Evan's Voice </option>
+					</select>
+				</div>
+
+				<% if (generated) { %>
+					<p> Something has been generated! Click Play! </p>
+				<% } else {%>
+					<p> Nothing has been generated yet :( </p>
+				<% } %>
+
+				<button class="btn btn-primary" onclick="playFile()"> Play! </button>
+
+				<br/>
+
+				<img class="large_img" src="../public/eighth_note.png" alt="Eighth Note"/> = 64
+				<img class="small_img" src="../public/quarter_note.png" alt="Quarter Note"/> = 128
+				<img class="small_img" src="../public/half_note.png" alt="Half Note"/> = 256
+				<img class="small_img" src="../public/quarter_rest.png" alt="Quarter Rest"/> = c9,128
+
+				<p id="input" > <b>Input Format:</b> noteOctave,duration noteOctave,duration ... </p>
+				<form method="post" action="generate">
+					<label> Melody </label>
+					<input 	type="text"
+							size = "30"
+							style = "margin: 15px"
+							name="pattern"
+							placeholder="Enter a string of Notes here, separated by commas"
+							value = "c4,128 c4,128, g4,128 g4,128 a4,128 a4,128 g4,256 f4,128 f4,128 e4,128 e4,128 d4,128 d4,128 c4,256"
+									 />
+					<label>Beats per Measure</label>
+					<select class = "dropdown" name = 'time'>
+						<option value="2"> 2</option>
+						<option value="3"> 3 </option>
+						<option value="4"> 4 </option>
+					</select> <br/>
+					<label> Harmony </label>
+					<input 	type="text"
+							size = "30"
+							style = "margin: 15px"
+							name="harmony"
+							placeholder="Enter a string of Notes here, separated by commas"
+							value = "c4,128 c4,128, e4,128 e4,128 f4,128 f4,128 e4,256 d4,128 d4,128 c4,128 c4,128 b3,128 b3,128 c4,256"
+									 />
+					<br/>
+					<button class = "btn btn-success" type="submit">
+						Generate Midi
+					</button>
+				</form>
+
+				<form method = "get" action="download">
+					<button  class="btn btn-danger" type="submit"> Download </button>
+				</form>
+
+			</div>
 		</div>
-
-	    <nav id = "keyboard">
-	        <% 
-	        var notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B']; 
-
-	        for (var i = 0; i < notes.length; i++)
-	          { 
-	        %> <button class="btn btn-default navbar-btn" onclick = "playNote('<%=notes[i]%>')"> <%= notes[i] %> </button>
-	        <% } %>
-	    </nav>  
-
-	    <p> <b> Keyboard Input: </b>keys A,S,D,F,G,H,J </p> 
-
-	    <h1> Javascript Midi Player </h1> 
-
-	    <p> <b> Instructions: </b> Enter a melody in the text box below in the format and press the green Generate Midi button. Then, use the following to select an instrument and Play! </p> 
-	    <div id="instrument_selector"> 
-	    	<label>  Melody Instrument:</label>
-		    <select class = "dropdown" id = 'melody_instrument'>
-		    	<option value="alto_sax">Antuan's Sax</option>
-				<option value="acoustic_grand_piano"> Andrew's Piano </option>
-				<option value="choir_aahs"> Evan's Voice </option>
-			</select>
-			<label> Harmony Instrument:</label>
-		    <select class = "dropdown" id = 'harmony_instrument'>
-		    	<option value="alto_sax">Antuan's Sax</option>
-				<option value="acoustic_grand_piano"> Andrew's Piano </option>
-				<option value="choir_aahs"> Evan's Voice </option>
-			</select>
-		</div>
-
-		<% if (generated) { %>
-			<p> Something has been generated! Click Play! </p> 
-		<% } else {%> 
-			<p> Nothing has been generated yet :( </p>
-		<% } %>
-
-		<a class="btn btn-primary" type = "button" onclick="javascript:void(playFile())"> Play! </a>
-
-		<br/>
-
-		<img src="../public/eighth_note.png" height = "45px"/> = 64 
-		<img src="../public/quarter_note.png"  height = "50px"/> = 128 
-		<img src="../public/half_note.png" height="50px" /> = 256
-		<img src="../public/quarter_rest.png" height="45px"/> = c9,128
-
-		<p id="input" > <b>Input Format:</b> noteOctave,duration noteOctave,duration ... </p>
-	    <form method="post" action="generate">
-	    	<label> Melody </label>
-	        <input 	type="text" 
-	        		size = "30"
-	        		style = "margin: 15px"
-	             	name="pattern"
-	             	placeholder="Enter a string of Notes here, separated by commas"
-                    value = "c4,128 c4,128, g4,128 g4,128 a4,128 a4,128 g4,256 f4,128 f4,128 e4,128 e4,128 d4,128 d4,128 c4,256"
-	                         />
-	        </input> 
-	        <label>Beats per Measure</label>
-	        <select class = "dropdown" name = 'time'>
-		    	<option value="2"> 2</option>
-				<option value="3"> 3 </option>
-				<option value="4"> 4 </option>
-			</select> <br/>
-	        <label> Harmony </label>
-	        <input 	type="text" 
-	        		size = "30"
-	        		style = "margin: 15px"
-	             	name="harmony"
-	             	placeholder="Enter a string of Notes here, separated by commas"
-                    value = "c4,128 c4,128, e4,128 e4,128 f4,128 f4,128 e4,256 d4,128 d4,128 c4,128 c4,128 b3,128 b3,128 c4,256"
-	                         />
-	        </input> <br/>
-	        <button class = "btn btn-success" type="submit"> 
-	        	Generate Midi
-	        </button>
-	    </form>
-
-	    <form method = "get" action="download">
-    		<button  class="btn btn-danger" type="submit"> Download </button>
-		</form>
-		
-		</div> 
  	</body>
 </html>
