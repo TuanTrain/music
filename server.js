@@ -43,7 +43,6 @@ app.use(app.router);
 
 // when the user GETs the homepage, render index(.ejs) 
 app.get('/', function (req, res) {
-
   	res.render('index', { generated: isGenerated });
 });
 
@@ -58,9 +57,9 @@ app.post('/generate', function(req, res){
  	*/ 
  	var melody = req.body.pattern; 
  	var time = parseInt(req.body.time, 10);
-
+	console.log(melody);
  	// black box function that takes a (string, array of strings). Always saves the output as ./mid/test.mid 
-	generate(req.body.pattern, [req.body.harmony]); 
+	generate(melody, [req.body.harmony]);
 	isGenerated = true; 
 	res.redirect('/');
 

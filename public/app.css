@@ -38,6 +38,21 @@ div.octave{
     float:left;
 }
 
+.active
+{
+    border: 2px solid red;
+}
+
+.inactive
+{
+    border: 2px solid black;
+}
+
+#legend
+{
+    margin: 10px;
+}
+
 /* note: position is relative, meaning each white key is added to the right of the previous */
 .white {
     float: left;
@@ -82,13 +97,8 @@ div.flats :nth-child(5) {
     margin-left: 258.5px;
 }
 
-.small_img
+img
 {
     height:50px;
-}
-
-.large_img
-{
-    height:45px;
 }
 
