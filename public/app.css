@@ -12,7 +12,7 @@ body
     padding:15px;
     border:1px solid #eee;
     background-color:#eee;
-    height: 1000px;
+    height: auto;
 }
 
 button
@@ -21,15 +21,15 @@ button
 }
 
 #midi{
-    position: absolute;
-    top:400px;
+    position: relative;
     width: 700px;
 }
 
 /* for centering purposes only */
-#keyboard
-{
-    margin-left:25px;
+#keyboard {
+    height: 250px;
+    margin-left: 25px;
+    overflow: hidden;
 }
 
 /* allows us to re-use CSS for each octave */
@@ -41,11 +41,6 @@ div.octave{
 .active
 {
     border: 2px solid red;
-}
-
-.inactive
-{
-    border: 2px solid black;
 }
 
 #legend
@@ -102,3 +97,18 @@ img
     height:50px;
 }
 
+#display
+{
+    height: 300px;
+    position: relative;
+    overflow: scroll;
+    white-space: nowrap;
+}
+.note
+{
+    display: inline-block;
+    height: 20px;
+    position: relative;
+    border-radius: 10px;
+    border: 1px solid black;
+}

@@ -24,6 +24,18 @@
 		var keyToNote = {}; // C8  == 108
 		var noteToKey = {}; // 108 ==  C8
 
+		(function () {
+			var A0 = 0x15; // first note
+			var C8 = 0x6C; // last note
+			var number2key = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+			for (var n = A0; n <= C8; n++) {
+				var octave = (n - 12) / 12 >> 0;
+				var name = number2key[n % 12] + octave;
+				keyToNote[name] = n;
+				noteToKey[n] = name;
+			}
+		})();
+
         // Detect keyboard presses 
         document.onkeydown = function(event){
 		    var key_press = String.fromCharCode(event.keyCode)
@@ -119,6 +131,8 @@
 				}
 			});
 			*/
+
+			updateDisplay();
 		}
 		
 		// Changes the global variable octave based on what is selected 
@@ -128,8 +142,34 @@
 	  		octave = e.options[e.selectedIndex].value;
 		}
 
+		$(document).ready(function(){
+			$('#display').html("<div class='note'> Note </div>");
+		});
 
-		
+		function updateDisplay()
+		{
+			var html = "";
+
+			for (var i = 0; i < userInput.length; i++)
+			{
+				var note = userInput[i].split(',')[0];
+				var duration = userInput[i].split(',')[1];
+
+				console.log(note);
+				console.log(duration);
+
+				html += "<div class='note' style='top:" + produceHeight(note) + "px; width:" + Math.round(duration/3.0) +
+				"px;'> " + note + "</div>";
+			}
+
+			$('#display').html(html);
+		}
+
+		function produceHeight(note)
+		{
+			var key = keyToNote[note];
+			return 300 - (key - 40) * 10;
+		}
 
         </script>
     </head>
@@ -202,6 +242,11 @@
 				</div>
 			</div>
 			<br/>
+
+			<div id="display">
+				Your melody will appear here :)
+			</div>
+
 			<div id="midi">
 				<h1> Javascript Midi Player </h1>
 
