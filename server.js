@@ -57,9 +57,14 @@ app.post('/generate', function(req, res){
  	*/ 
  	var melody = req.body.pattern; 
  	var time = parseInt(req.body.time, 10);
+
 	console.log(melody);
- 	// black box function that takes a (string, array of strings). Always saves the output as ./mid/test.mid 
-	generate(melody, [req.body.harmony]);
+	// generates the melody file
+	generate(melody, ["c9,64"], 'melody.mid');
+
+	// generates the harmony file
+	generate(melody, [req.body.harmony], 'harmony.mid');
+
 	isGenerated = true; 
 	res.redirect('/');
 
@@ -67,7 +72,7 @@ app.post('/generate', function(req, res){
 
 // if the user GETS the download page, then send them the mid file 
 app.get('/download', function(req, res){
-  	res.download('./mid/test.mid', 'yourMusic.mid');
+  	res.download('./mid/harmony.mid', 'yourMusic.mid');
   	// res.redirect('/');
 });
 

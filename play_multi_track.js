@@ -4,7 +4,7 @@
 
 ***********************************************************************************************/
 
-function generateMidi(melody, harmonies)
+function generateMidi(melody, harmonies, name)
 {
 	var Midi = require('jsmidgen');
 	var fs = require('fs');
@@ -101,7 +101,7 @@ function generateMidi(melody, harmonies)
 		// everything updates in the while loop
 	}
 
-	fs.writeFileSync('./mid/test.mid', file.toBytes(), 'binary');
+	fs.writeFileSync('./mid/' + name, file.toBytes(), 'binary');
 }
 
 module.exports = generateMidi; 

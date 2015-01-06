@@ -62,8 +62,39 @@
 			});
 		});
 
-		// Plays the midi file (always test.mid)
-        function playFile() {
+		function updateDisplay(){
+
+			console.log('called');
+			var html = "";
+
+			for (var i = 0; i < userInput.length; i++)
+			{
+				var note = userInput[i].split(',')[0];
+				var duration = userInput[i].split(',')[1];
+
+				var x = Math.round((keyToNote[note] - 60)/20 * 255);
+				var color = 'rgb(' + x + ', 150,' + (255 -x ) + ')';
+				console.log(color);
+				html += "<div class='note' style='top:" + produceHeight(note) + "px; width:" + Math.round(duration/3.0) +
+				"px; background-color:" + color + ";'> " + note + "</div>";
+
+			}
+
+			$('#display').html(html);
+		}
+
+
+		function produceHeight(note)
+		{
+			var key = keyToNote[note];
+			return 280 - (key - 60) * 10;
+		}
+
+
+		// Plays the midi file by name
+        function playFile(name) {
+
+			userInput = [];
 
         	var element1 = document.getElementById('melody_instrument');
         	var element2 = document.getElementById('harmony_instrument');
@@ -83,9 +114,38 @@
         		MIDI.programChange(0, lookup[instrument2]);	// lookup[instrument]
         		MIDI.programChange(1, lookup[instrument1]);
 
-                MIDI.Player.loadFile('./mid/test.mid', MIDI.Player.start); 
+                MIDI.Player.loadFile('./mid/' + name, MIDI.Player.start);
                }
         	});
+
+			var prev;
+
+			MIDI.Player.addListener(function(data) { // set it to your own function
+				var now = data.now; // where we are now
+				var end = data.end; // time when song ends
+				var channel = data.channel; // channel note is playing on
+				var message = data.message; // 128 is noteOff, 144 is noteOn
+				var note = data.note; // the note
+				var velocity = data.velocity; // the velocity of the note
+				console.log('note ' + note);
+				console.log('message ' + message);
+				if (message == 144)
+				{
+					console.log('here');
+					prev = now;
+				}
+				if (message == 128) {
+					console.log('now ' + now);
+					console.log('note ' + note);
+					var duration = (now - prev) / 500.0 * 128;
+					console.log('duration ' + duration);
+					if (noteToKey.hasOwnProperty(note)) {
+						userInput.push(noteToKey[note] + ',' + duration);
+						console.log(userInput[userInput.length - 1]);
+						updateDisplay();
+					}
+				}
+			});
     	}
 
     	// Plays a note from mp3 library
@@ -99,6 +159,7 @@
 			if (userInput.length !== 0)
 			{
 				userInput = $('#melody').val().split(' ');
+
 			}
 			else
 			{
@@ -106,9 +167,10 @@
 			}
 
 			userInput.push(note + octave +',' + duration);
-
 			$('#melody').val(userInput.join(' '));
-			$('#harmony').val("C9,128");
+
+
+			$('#harmony').val("C9,64");
 
         	/*
 			The following code can be used to dynamically generate the mp3's (as midi's), 
@@ -146,30 +208,6 @@
 			$('#display').html("<div class='note'> Note </div>");
 		});
 
-		function updateDisplay()
-		{
-			var html = "";
-
-			for (var i = 0; i < userInput.length; i++)
-			{
-				var note = userInput[i].split(',')[0];
-				var duration = userInput[i].split(',')[1];
-
-				console.log(note);
-				console.log(duration);
-
-				html += "<div class='note' style='top:" + produceHeight(note) + "px; width:" + Math.round(duration/3.0) +
-				"px;'> " + note + "</div>";
-			}
-
-			$('#display').html(html);
-		}
-
-		function produceHeight(note)
-		{
-			var key = keyToNote[note];
-			return 300 - (key - 40) * 10;
-		}
 
         </script>
     </head>
@@ -272,7 +310,8 @@
 					<p> Nothing has been generated yet :( </p>
 				<% } %>
 
-				<button class="btn btn-primary" onclick="playFile()"> Play! </button>
+				<button class="btn btn-primary" onclick="playFile('melody.mid')"> Play Melody Only! </button>
+				<button class="btn btn-primary" onclick="playFile('harmony.mid')"> Play with Harmony! </button>
 
 				<br/>
 
