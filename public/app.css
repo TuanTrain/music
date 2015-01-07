@@ -97,7 +97,7 @@ img
     height:50px;
 }
 
-#display
+#cool
 {
     height: 300px;
     position: relative;
@@ -107,8 +107,22 @@ img
 .note
 {
     display: inline-block;
-    height: 20px;
+    height: 10%;
     position: relative;
-    border-radius: 10px;
+    border-radius: 35px;
     border: 1px solid black;
+    z-index: 10;
+}
+
+#display
+{
+    height: inherit;
+}
+
+.line
+{
+    height: 1px;
+    width: 700px;
+    position: absolute;
+    border: 1px solid black
 }

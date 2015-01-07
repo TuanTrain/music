@@ -75,7 +75,7 @@
 				var x = Math.round((keyToNote[note] - 60)/20 * 255);
 				var color = 'rgb(' + x + ', 150,' + (255 -x ) + ')';
 				console.log(color);
-				html += "<div class='note' style='top:" + produceHeight(note) + "px; width:" + Math.round(duration/3.0) +
+				html += "<div class='note' style='top:" + produceHeight(note) + "%; width:" + Math.round(duration/3.0) +
 				"px; background-color:" + color + ";'> " + note + "</div>";
 
 			}
@@ -86,8 +86,17 @@
 
 		function produceHeight(note)
 		{
-			var key = keyToNote[note];
-			return 280 - (key - 60) * 10;
+			var num_notes = {'c':0, 'cs': 0, 'd': 1, 'ds': 1, 'e':2, 'es': 2, 'f': 3, 'fs':3, 'g':4, 'gs':4,
+				'a':5, 'as':5, 'b':6, 'bs':6
+			}
+
+			var note_string = note.substring(0, note.length - 1);
+			var octave = note.substring(note.length - 1, note.length);
+
+			console.log(note_string);
+			console.log(octave);
+
+			return 80 - ((7 * octave - 28) + num_notes[note_string.toLowerCase()]) * 5;
 		}
 
 
@@ -167,7 +176,7 @@
 			}
 
 			userInput.push(note + octave +',' + duration);
-			$('#melody').val(userInput.join(' '));
+			$('#melody').val((userInput.length != 0) ? userInput.join(' ') : '');
 
 
 			$('#harmony').val("C9,64");
@@ -203,10 +212,6 @@
     		var e = document.getElementById('octave_selector');
 	  		octave = e.options[e.selectedIndex].value;
 		}
-
-		$(document).ready(function(){
-			$('#display').html("<div class='note'> Note </div>");
-		});
 
 
         </script>
@@ -281,8 +286,11 @@
 			</div>
 			<br/>
 
-			<div id="display">
-				Your melody will appear here :)
+			<div id="cool">
+				<div id="display"> </div>
+				<% for (var i = 0; i < 5; i++) { %>
+				<div class="line" style="top:<%=10*i + 35%>%"></div>
+				<% } %>
 			</div>
 
 			<div id="midi">
