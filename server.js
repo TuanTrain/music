@@ -57,13 +57,14 @@ app.post('/generate', function(req, res){
  	*/ 
  	var melody = req.body.pattern; 
  	var time = parseInt(req.body.time, 10);
+	var harmonyType= req.body.harmonyType;
 
 	console.log(melody);
 	// generates the melody file
 	generate(melody, ["c9,64"], 'melody.mid');
 
 	// generates the harmony file
-	var harmony = (parseChords(generateChords(melody, time)));
+	var harmony = (parseChords(generateChords(melody, time,harmonyType)));
 	generate(melody, harmony, 'harmony.mid');
 
 	isGenerated = true; 
@@ -115,18 +116,49 @@ representing chords with duration (e.g. "c4maj,512 a4min,512 f4maj,512 g4maj,512
 Please use the helper function getChord(root,type) written below to do this. 
 
 *************************************/
-function generateChords(melody, time)
+function generateChords(melody, time, type)
 {
-	var chords = [];
-	var melody1 = melody.split(' '); 
-	for (var i = 0, n = melody1.length; i < n; i++) 
-	{
-  		var note = melody1[i].split(',') [0];
-  		var duration = melody1[i].split(',') [1];
-  		//var chord = 
-  		chords.push(note + "maj," + duration);
+	//var chordIndex = ["I", "ii", "iii", "IV", "V", "vi", "vii"];
+	var chordProgMaj = {
+		'I': "I,V,IV,vi",
+		'ii': "ii,V,IV,vi",
+		'iii': "iii,IV,vi",
+		'IV': "IV,I,V,vi,ii",
+		'V': "V,I,vi,IV",
+		'vi': "vi,V,IV,ii,iii",
+		'vii': "vii,V,I"
 	}
-	console.log(chords)
+	var chordNotes = {
+		'I': "C,E,G",
+		'i': "C,Eb,G",
+		'II': "d,Gb,A",
+		'ii': "D,F,A",
+		'III': "E,Ab,B",
+		'iii': "E,G,B",
+		'IV': "F,A,C",
+		'iv': "F,Ab,C",
+		'V': "G,B,D",
+		'v': "G,Bb,D",
+		'VI': "A,Db,E",
+		'vi': "A,C,E",
+		'VII': "B,Eb,Gb",
+		'vii': "B,D,F"
+	}
+	var chords = [];
+	var melody1 = melody.split(' ');
+	if(type == "byNote")
+	{
+		for (var i = 0, n = melody1.length; i < n; i++) {
+			var note = melody1[i].split(',') [0];
+			var duration = melody1[i].split(',') [1];
+			chords.push(note + "maj," + duration);
+		}
+	}
+	else if(type == "byMeasure")
+	{
+		var measureLength = time * 128;
+	}
+	console.log(chords);
 	return chords;
 }
 
@@ -195,6 +227,6 @@ console.log([noteToKey[root_key], noteToKey[second_key], noteToKey[third_key]]);
 }
 
 // listens at this particular port 
-var port = 3000; 
+var port = 3000;
 app.listen(port);
 console.log("Listening on port:" + port);
