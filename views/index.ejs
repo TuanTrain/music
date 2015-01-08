@@ -27,7 +27,7 @@
 		(function () {
 			var A0 = 0x15; // first note
 			var C8 = 0x6C; // last note
-			var number2key = ["C", "DB", "D", "EB", "E", "F", "GB", "G", "AB", "A", "BB", "B"];
+			var number2key = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
 			for (var n = A0; n <= C8; n++) {
 				var octave = (n - 12) / 12 >> 0;
 				var name = number2key[n % 12] + octave;
@@ -53,9 +53,10 @@
 		    
 		};
 
-		$(document).ready(function() {
+		$( document ).ready(function() {
 			$('#legend').children().on('click', function() {
 				$('.active').toggleClass('active');
+				console.log($(this).val());
 				duration = parseInt(this.alt, 10);
 				$(this).toggleClass('active');
 			});
@@ -63,6 +64,7 @@
 
 		function updateDisplay(){
 
+			console.log('called');
 			var html = "";
 
 			for (var i = 0; i < userInput.length; i++)
@@ -71,9 +73,8 @@
 				var duration = userInput[i].split(',')[1];
 
 				var x = Math.round((keyToNote[note] - 60)/20 * 255);
-
-				var color = 'rgb(' + x + ', 150,' + (255 - x) + ')';
-
+				var color = 'rgb(' + x + ', 150,' + (255 -x ) + ')';
+				console.log(color);
 				html += "<div class='note' style='top:" + produceHeight(note) + "%; width:" + Math.round(duration/3.0) +
 				"px; background-color:" + color + ";'> " + note + "</div>";
 
@@ -85,8 +86,8 @@
 
 		function produceHeight(note)
 		{
-			var num_notes = {'C':0, 'DB': 1, 'D': 1, 'EB': 2, 'E':2, 'FB': 3, 'F': 3, 'GB':4, 'G':4, 'AB':5,
-				'A':5, 'BB':6, 'B':6, 'CB':7
+			var num_notes = {'C':0, 'Db': 1, 'D': 1, 'Eb': 2, 'E':2, 'Fb': 3, 'F': 3, 'Gb':4, 'G':4, 'Ab':5,
+				'A':5, 'Bb':6, 'B':6, 'Cb':7
 			}
 
 			var note_string = note.substring(0, note.length - 1);
@@ -115,7 +116,7 @@
         
             MIDI.loadPlugin({
             soundfontUrl: "./soundfont/",
-            instruments: [instrument2, instrument1],
+            instruments: [ instrument2, instrument1],
             callback: function() {
 
             	// we must set the program of the tracks to the instruments we've chosen 
@@ -135,7 +136,6 @@
 				var message = data.message; // 128 is noteOff, 144 is noteOn
 				var note = data.note; // the note
 				var velocity = data.velocity; // the velocity of the note
-
 				console.log('note ' + note);
 				console.log('message ' + message);
 				if (message == 144)
@@ -143,7 +143,6 @@
 					console.log('here');
 					prev = now;
 				}
-
 				if (message == 128) {
 					console.log('now ' + now);
 					console.log('note ' + note);
@@ -264,11 +263,11 @@
 						</div>
 
 						<div class="flats">
-							<div id="4Cs" class="key black" onclick = "playNote('DB')"> </div>
-							<div id="4Ds" class="key black" onclick = "playNote('EB')"> </div>
-							<div id="4Fs" class="key black" onclick = "playNote('GB')"> </div>
-							<div id="4Gs" class="key black" onclick = "playNote('AB')"> </div>
-							<div id="4As" class="key black" onclick = "playNote('BB')"> </div>
+							<div id="4Cs" class="key black" onclick = "playNote('Db')"> </div>
+							<div id="4Ds" class="key black" onclick = "playNote('Eb')"> </div>
+							<div id="4Fs" class="key black" onclick = "playNote('Gb')"> </div>
+							<div id="4Gs" class="key black" onclick = "playNote('Ab')"> </div>
+							<div id="4As" class="key black" onclick = "playNote('Bb')"> </div>
 						</div>
 					</div>
 					<div class="octave">
@@ -283,21 +282,19 @@
 						</div>
 
 						<div class="flats">
-							<div id="4Cs" class="key black" onclick = "playNoteOct2('DB')"> </div>
-							<div id="4Ds" class="key black" onclick = "playNoteOct2('EB')"> </div>
-							<div id="4Fs" class="key black" onclick = "playNoteOct2('GB')"> </div>
-							<div id="4Gs" class="key black" onclick = "playNoteOct2('AB')"> </div>
-							<div id="4As" class="key black" onclick = "playNoteOct2('BB')"> </div>
+							<div id="4Cs" class="key black" onclick = "playNoteOct2('Db')"> </div>
+							<div id="4Ds" class="key black" onclick = "playNoteOct2('Eb')"> </div>
+							<div id="4Fs" class="key black" onclick = "playNoteOct2('Gb')"> </div>
+							<div id="4Gs" class="key black" onclick = "playNoteOct2('Ab')"> </div>
+							<div id="4As" class="key black" onclick = "playNoteOct2('Bb')"> </div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<br/>
-			
-			<div id="noteContainer">
-				<img id="clef" src="../public/treble_clef.png"/>
-				<div id="display"> </div>
 
+			<div id="noteContainer">
+				<div id="display"> </div>
 				<% for (var i = 0; i < 5; i++) { %>
 				<div class="line" style="top:<%=10*i + 35%>%"></div>
 				<% } %>
