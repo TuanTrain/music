@@ -27,7 +27,7 @@
 		(function () {
 			var A0 = 0x15; // first note
 			var C8 = 0x6C; // last note
-			var number2key = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+			var number2key = ["C", "DB", "D", "EB", "E", "F", "GB", "G", "AB", "A", "BB", "B"];
 			for (var n = A0; n <= C8; n++) {
 				var octave = (n - 12) / 12 >> 0;
 				var name = number2key[n % 12] + octave;
@@ -85,8 +85,8 @@
 
 		function produceHeight(note)
 		{
-			var num_notes = {'c':0, 'cs': 0, 'd': 1, 'ds': 1, 'e':2, 'es': 2, 'f': 3, 'fs':3, 'g':4, 'gs':4,
-				'a':5, 'as':5, 'b':6, 'bs':6
+			var num_notes = {'C':0, 'DB': 1, 'D': 1, 'EB': 2, 'E':2, 'FB': 3, 'F': 3, 'GB':4, 'G':4, 'AB':5,
+				'A':5, 'BB':6, 'B':6, 'CB':7
 			}
 
 			var note_string = note.substring(0, note.length - 1);
@@ -95,7 +95,7 @@
 			console.log(note_string);
 			console.log(octave);
 
-			return 80 - ((7 * octave - 28) + num_notes[note_string.toLowerCase()]) * 5;
+			return 80 - ((7 * octave - 28) + num_notes[note_string]) * 5;
 		}
 
 
@@ -213,6 +213,11 @@
     		var e = document.getElementById('octave_selector');
 	  		octave = e.options[e.selectedIndex].value;
 		}
+		function playNoteOct2(note) {
+			octave++;
+			playNote(note);
+			octave--;
+		}
 
 
         </script>
@@ -249,47 +254,47 @@
 				<div id="keyboard" class="center">
 					<div class="octave">
 						<div id="o4">
-							<div id="4C" class="key white">	</div>
-							<div id="4D" class="key white">	</div>
-							<div id="4E" class="key white">	</div>
-							<div id="4F" class="key white">	</div>
-							<div id="4G" class="key white">	</div>
-							<div id="4A" class="key white">	</div>
-							<div id="4B" class="key white">	</div>
+							<div id="4C" class="key white" onclick = "playNote('C')">	</div>
+							<div id="4D" class="key white" onclick = "playNote('D')">	</div>
+							<div id="4E" class="key white" onclick = "playNote('E')">	</div>
+							<div id="4F" class="key white" onclick = "playNote('F')">	</div>
+							<div id="4G" class="key white" onclick = "playNote('G')">	</div>
+							<div id="4A" class="key white" onclick = "playNote('A')">	</div>
+							<div id="4B" class="key white" onclick = "playNote('B')">	</div>
 						</div>
 
 						<div class="flats">
-							<div id="4Cs" class="key black"> </div>
-							<div id="4Ds" class="key black"> </div>
-							<div id="4Fs" class="key black"> </div>
-							<div id="4Gs" class="key black"> </div>
-							<div id="4As" class="key black"> </div>
+							<div id="4Cs" class="key black" onclick = "playNote('DB')"> </div>
+							<div id="4Ds" class="key black" onclick = "playNote('EB')"> </div>
+							<div id="4Fs" class="key black" onclick = "playNote('GB')"> </div>
+							<div id="4Gs" class="key black" onclick = "playNote('AB')"> </div>
+							<div id="4As" class="key black" onclick = "playNote('BB')"> </div>
 						</div>
 					</div>
 					<div class="octave">
 						<div id="o5">
-							<div id="4C" class="key white">	</div>
-							<div id="4D" class="key white">	</div>
-							<div id="4E" class="key white">	</div>
-							<div id="4F" class="key white">	</div>
-							<div id="4G" class="key white">	</div>
-							<div id="4A" class="key white">	</div>
-							<div id="4B" class="key white">	</div>
+							<div id="4C" class="key white" onclick = "playNoteOct2('C')">	</div>
+							<div id="4D" class="key white" onclick = "playNoteOct2('D')">	</div>
+							<div id="4E" class="key white" onclick = "playNoteOct2('E')">	</div>
+							<div id="4F" class="key white" onclick = "playNoteOct2('F')">	</div>
+							<div id="4G" class="key white" onclick = "playNoteOct2('G')">	</div>
+							<div id="4A" class="key white" onclick = "playNoteOct2('A')">	</div>
+							<div id="4B" class="key white" onclick = "playNoteOct2('B')">	</div>
 						</div>
 
 						<div class="flats">
-							<div id="4Cs" class="key black"> </div>
-							<div id="4Ds" class="key black"> </div>
-							<div id="4Fs" class="key black"> </div>
-							<div id="4Gs" class="key black"> </div>
-							<div id="4As" class="key black"> </div>
+							<div id="4Cs" class="key black" onclick = "playNoteOct2('DB')"> </div>
+							<div id="4Ds" class="key black" onclick = "playNoteOct2('EB')"> </div>
+							<div id="4Fs" class="key black" onclick = "playNoteOct2('GB')"> </div>
+							<div id="4Gs" class="key black" onclick = "playNoteOct2('AB')"> </div>
+							<div id="4As" class="key black" onclick = "playNoteOct2('BB')"> </div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<br/>
-
-			<div id="cool">
+			
+			<div id="noteContainer">
 				<img id="clef" src="../public/treble_clef.png"/>
 				<div id="display"> </div>
 

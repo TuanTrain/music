@@ -10,7 +10,6 @@ body
     width:80%;
     text-align: center;
     margin:0px auto;
-
     border:1px solid #eee;
     background-color:#eee;
     height: auto;
@@ -109,7 +108,7 @@ img
     height:50px;
 }
 
-#cool
+#noteContainer
 {
     height: 350px;
     width: 650px;
