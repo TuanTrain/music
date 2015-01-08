@@ -223,7 +223,6 @@
 
 		function coloring(obj_id) {
 			var colorstring = obj_id.substring(1) + obj_id[0];
-			colorstring = colorstring.replace("s", "b");
 			document.getElementById(obj_id).style.background = getColor(colorstring);
 
 		}
@@ -272,7 +271,7 @@
 						</div>
 
 						<div class="flats">
-							<div id="4Cs" class="key black" onmouseover = "coloring('4Cs')" onclick = "playNote('Db')"> </div>
+							<div id="4Cs" class="key black" onclick = "playNote('Db')"> </div>
 							<div id="4Ds" class="key black" onclick = "playNote('Eb')"> </div>
 							<div id="4Fs" class="key black" onclick = "playNote('Gb')"> </div>
 							<div id="4Gs" class="key black" onclick = "playNote('Ab')"> </div>
@@ -308,7 +307,7 @@
 				</div>
 			<br/>
 
-			<div id="staffContainer">
+			<div id="noteContainer">
 				<img id="clef" src="../public/treble_clef.png">
 				<div id="display"> </div>
 				<% for (var i = 0; i < 5; i++) { %>
