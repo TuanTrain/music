@@ -10,7 +10,6 @@ body
     width:80%;
     text-align: center;
     margin:0px auto;
-
     border:1px solid #eee;
     background-color:#eee;
     height: auto;
@@ -24,6 +23,7 @@ button
 #midi{
     position: relative;
     width: 700px;
+    margin: auto;
 }
 
 /* for centering purposes only */
