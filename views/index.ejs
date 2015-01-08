@@ -71,16 +71,19 @@
 			{
 				var note = userInput[i].split(',')[0];
 				var duration = userInput[i].split(',')[1];
-
-				var x = Math.round((keyToNote[note] - 60)/20 * 255);
-				var color = 'rgb(' + x + ', 150,' + (255 -x ) + ')';
-				console.log(color);
+				var color = getColor(note);
 				html += "<div class='note' style='top:" + produceHeight(note) + "%; width:" + Math.round(duration/3.0) +
 				"px; background-color:" + color + ";'> " + note + "</div>";
 
 			}
 
 			$('#display').html(html);
+		}
+
+		function getColor(note) {
+			var x = Math.round((keyToNote[note] - 60)/20 * 255);
+			return color = 'rgb(' + x + ', 150,' + (255 -x ) + ')';
+
 		}
 
 
@@ -219,7 +222,9 @@
 		}
 
 		function coloring(obj_id) {
-			document.getElementById(obj_id).style.background-color = "blue";
+			var colorstring = obj_id.substring(1) + obj_id[0];
+			colorstring = colorstring.replace("s", "b");
+			document.getElementById(obj_id).style.background = getColor(colorstring);
 
 		}
 
@@ -267,7 +272,7 @@
 						</div>
 
 						<div class="flats">
-							<div id="4Cs" class="key black" onclick = "playNote('Db')"> </div>
+							<div id="4Cs" class="key black" onmouseover = "coloring('4Cs')" onclick = "playNote('Db')"> </div>
 							<div id="4Ds" class="key black" onclick = "playNote('Eb')"> </div>
 							<div id="4Fs" class="key black" onclick = "playNote('Gb')"> </div>
 							<div id="4Gs" class="key black" onclick = "playNote('Ab')"> </div>
@@ -280,17 +285,17 @@
 							<div id="5D" class="key white" onclick = "playNoteOct2('D')">	</div>
 							<div id="5E" class="key white" onclick = "playNoteOct2('E')">	</div>
 							<div id="5F" class="key white" onclick = "playNoteOct2('F')">	</div>
-							<div id="5ZZZG" class="key white" onclick = "playNoteOct2('G')">	</div>
-							<div id="4A" class="key white" onclick = "playNoteOct2('A')">	</div>
-							<div id="4B" class="key white" onclick = "playNoteOct2('B')">	</div>
+							<div id="5G" class="key white" onclick = "playNoteOct2('G')">	</div>
+							<div id="5A" class="key white" onclick = "playNoteOct2('A')">	</div>
+							<div id="5B" class="key white" onclick = "playNoteOct2('B')">	</div>
 						</div>
 
 						<div class="flats">
-							<div id="4Cs" class="key black" onclick = "playNoteOct2('Db')"> </div>
-							<div id="4Ds" class="key black" onclick = "playNoteOct2('Eb')"> </div>
-							<div id="4Fs" class="key black" onclick = "playNoteOct2('Gb')"> </div>
-							<div id="4Gs" class="key black" onclick = "playNoteOct2('Ab')"> </div>
-							<div id="4As" class="key black" onclick = "playNoteOct2('Bb')"> </div>
+							<div id="5Cs" class="key black" onclick = "playNoteOct2('Db')"> </div>
+							<div id="5Ds" class="key black" onclick = "playNoteOct2('Eb')"> </div>
+							<div id="5Fs" class="key black" onclick = "playNoteOct2('Gb')"> </div>
+							<div id="5Gs" class="key black" onclick = "playNoteOct2('Ab')"> </div>
+							<div id="5As" class="key black" onclick = "playNoteOct2('Bb')"> </div>
 						</div>
 					</div>
 				</div>
@@ -303,7 +308,7 @@
 				</div>
 			<br/>
 
-			<div id="noteContainer">
+			<div id="staffContainer">
 				<img id="clef" src="../public/treble_clef.png">
 				<div id="display"> </div>
 				<% for (var i = 0; i < 5; i++) { %>
