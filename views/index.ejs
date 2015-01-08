@@ -21,6 +21,8 @@
 
 		var userInput = [];
 
+		var lineLength = 0;
+
 		var keyToNote = {}; // C8  == 108
 		var noteToKey = {}; // 108 ==  C8
 
@@ -62,28 +64,47 @@
 			});
 		});
 
-		function updateDisplay(){
+		function updateDisplay(type){
 
-			console.log('called');
-			var html = "";
-
-			for (var i = 0; i < userInput.length; i++)
+			if (type == 'clear')
 			{
-				var note = userInput[i].split(',')[0];
-				var duration = userInput[i].split(',')[1];
-				var color = getColor(note);
-				html += "<div class='note' style='top:" + produceHeight(note) + "%; width:" + Math.round(duration/3.0) +
-				"px; background-color:" + color + ";'> " + note + "</div>";
-
+				$('#display').html('');
+				userInput = [];
+				$('.line').css('width', 'inherit');
 			}
 
-			$('#display').html(html);
+			else if (type == 'delete')
+			{
+				var index = $('#display').html().lastIndexOf('class');
+				console.log(index);
+				$('#display').html($('#display').html().substring(0, index - 8));
+
+				userInput.pop();
+			}
+			else {
+				var html = $('#display').html();
+
+				var note = userInput[userInput.length - 1].split(',')[0];
+				var duration = userInput[userInput.length - 1].split(',')[1];
+				var color = getColor(note);
+
+				html += "<div class='note' style='top:" + produceHeight(note) + "%; width:" + Math.round(duration / 3.0) +
+				"px; background-color:" + color + ";'> " + note + "</div>";
+
+				$('#display').html(html);
+
+				var width = $('.line').css('width');
+				console.log(width);
+				$('.line').css('width', parseInt(width.substring(0, width.length - 2), 10) + 50 + 'px');
+			}
+
+			$('#melody').val((userInput.length != 0) ? userInput.join(' ') : '');
+
 		}
 
 		function getColor(note) {
 			var x = Math.round((keyToNote[note] - 60)/20 * 255);
 			return color = 'rgb(' + x + ', 150,' + (255 -x ) + ')';
-
 		}
 
 
@@ -179,10 +200,6 @@
 			}
 
 			userInput.push(note + octave +',' + duration);
-			$('#melody').val((userInput.length != 0) ? userInput.join(' ') : '');
-
-
-			$('#harmony').val("C9,64");
 
         	/*
 			The following code can be used to dynamically generate the mp3's (as midi's), 
@@ -309,10 +326,17 @@
 
 			<div id="noteContainer">
 				<img id="clef" src="../public/treble_clef.png">
-				<div id="display"> </div>
+				<div id="display"></div>
+
 				<% for (var i = 0; i < 5; i++) { %>
-				<div class="line" style="top:<%=10*i + 35%>%"></div>
+					<div class="line" style="top: <%=10 * i + 35%>%;"></div>
 				<% } %>
+
+			</div>
+
+			<div id="controls">
+				<button type="button" class="btn btn-warning" onclick="updateDisplay('delete')"> Delete </button>
+				<button type="button" class="btn btn-danger" onclick="updateDisplay('clear')"> Clear </button>
 			</div>
 
 			<div id="midi">
@@ -344,7 +368,6 @@
 				<button class="btn btn-primary" onclick="playFile('harmony.mid')"> Play with Harmony! </button>
 
 				<br/>
-
 
 				<p id="input" > <b>Input Format:</b> noteOctave,duration noteOctave,duration ... </p>
 				<form method="post" action="generate">
