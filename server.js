@@ -58,6 +58,7 @@ app.post('/generate', function(req, res){
  	var melody = req.body.pattern; 
  	var time = parseInt(req.body.time, 10);
 	var harmonyType= req.body.harmonyType;
+	console.log(req.body.harmonyType);
 
 	console.log(melody);
 	// generates the melody file
@@ -107,31 +108,12 @@ var noteToKey = {}; // 108 ==  C8
 	}
 })();
 
-/************************************
-TODO - generateChords (allows us to adjust the harmonization algorithm)
-
-Given a melody and a time signature (simply quarter notes per measure), return string 
-representing chords with duration (e.g. "c4maj,512 a4min,512 f4maj,512 g4maj,512")
-
-Please use the helper function getChord(root,type) written below to do this. 
-
-*************************************/
-function generateChords(melody, time, type)
+function checkNotes(notes, chord)
 {
-	//var chordIndex = ["I", "ii", "iii", "IV", "V", "vi", "vii"];
-	var chordProgMaj = {
-		'I': "I,V,IV,vi",
-		'ii': "ii,V,IV,vi",
-		'iii': "iii,IV,vi",
-		'IV': "IV,I,V,vi,ii",
-		'V': "V,I,vi,IV",
-		'vi': "vi,V,IV,ii,iii",
-		'vii': "vii,V,I"
-	}
 	var chordNotes = {
 		'I': "C,E,G",
 		'i': "C,Eb,G",
-		'II': "d,Gb,A",
+		'II': "D,Gb,A",
 		'ii': "D,F,A",
 		'III': "E,Ab,B",
 		'iii': "E,G,B",
@@ -143,6 +125,83 @@ function generateChords(melody, time, type)
 		'vi': "A,C,E",
 		'VII': "B,Eb,Gb",
 		'vii': "B,D,F"
+	}
+	var matches = 0;
+	var checkNotes = chordNotes[chord];
+	for (var i = 0, n = notes.length; i < n; i++)
+	{
+		if (checkNotes.indexof(notes[i].substring(0,notes[i].length)) > 0)
+		{
+			matches++;
+		}
+	}
+	return matches;
+}
+
+function chooseChord(notes, prevChord)
+{
+		var chordProgMaj =
+		{
+			'I': "I,V,IV,vi",
+			'ii': "ii,V,IV,vi",
+			'iii': "iii,IV,vi",
+			'IV': "IV,I,V,vi,ii",
+			'V': "V,I,vi,IV",
+			'vi': "vi,V,IV,ii,iii",
+			'vii': "vii,V,I"
+	}
+
+	var possibleChords = [];
+	var choiceChords = chordProgMaj[prevChord].split(',');
+	for (var i = 0, n = choiceChords.length; i < n; i++)
+	{
+		var curChord = choiceChords[i];
+		var matches = checkNotes(notes, curChord[i]);
+		if(matches > 0)
+		{
+			possibleChords.push(curChord + "," + matches);
+		}
+	}
+	var chosenOne = "I";
+	var matchedNotes = 0;
+	if(possibleChords) {
+		for (var i = 0, n = possibleChords.length; i < n; i++) {
+			if (possibleChords[i].split(',')[1] > matchedNotes) {
+				chosenOne = possibleChords[i].split(',')[0];
+				matchedNotes = possibleChords[i].split(',')[1];
+			}
+		}
+	}
+	console.log(chosenOne);
+	return chosenOne;
+}
+
+/************************************
+TODO - generateChords (allows us to adjust the harmonization algorithm)
+
+Given a melody and a time signature (simply quarter notes per measure), return string 
+representing chords with duration (e.g. "c4maj,512 a4min,512 f4maj,512 g4maj,512")
+
+Please use the helper function getChord(root,type) written below to do this. 
+
+*************************************/
+function generateChords(melody, time, type)
+{
+	var chordFromRoman = {
+		'I': "C3maj",
+		'i': "C3min",
+		'II': "D3maj",
+		'ii': "D3min",
+		'III': "E3maj",
+		'iii': "E3min",
+		'IV': "F3maj",
+		'iv': "F3min",
+		'V': "G3maj",
+		'v': "G3min",
+		'VI': "A3maj",
+		'vi': "A3min",
+		'VII': "B3maj",
+		'vii': "B3min"
 	}
 	var chords = [];
 	var melody1 = melody.split(' ');
@@ -156,7 +215,35 @@ function generateChords(melody, time, type)
 	}
 	else if(type == "byMeasure")
 	{
+		var firstMeasure = true;
 		var measureLength = time * 128;
+		var notesLength = 0;
+		var measureNotes = [];
+		var prevChord = "I";
+		var nextChord = "I";
+		for (var i = 0, n = melody1.length; i < n; i++) {
+			measureNotes.push(melody1[i].split(',') [0]);
+			notesLength += melody1[i].split(',') [1];
+			if (notesLength >= measureLength || i == (n-1))
+			{
+				if (firstMeasure == true) {
+					chords.push("c3maj," + measureLength);
+					firstMeasure = false;
+				}
+				else {
+					console.log(nextChord);
+					nextChord = chooseChord(measureNotes, prevChord);
+					chords.push(chordFromRoman[nextChord] + "," + measureLength);
+					prevChord = nextChord;
+				}
+			}
+			measureNotes = [];
+			if (notesLength > measureLength)
+			{
+				measureNotes.push(melody1[i].split(',') [0]);
+			}
+			notesLength = 0;
+		}
 	}
 	console.log(chords);
 	return chords;
@@ -185,9 +272,6 @@ function parseChords(chords)
 		var chord = chords[i].split(',') [0];
   		var duration = chords[i].split(',') [1];
   		var type = chord.substring(chord.length - 3);
-
-  		console.log(root);
-  		console.log(type);
   		var root = chord.substring(0, chord.length - 3);
   		var notes = getChord(root,type);
   		track1.push(notes[0] + "," + duration);
@@ -215,7 +299,6 @@ function getChord(root, type)
 	var root_key = keyToNote[root];
 	
 	var second_key = root_key + ((type == 'maj' || type == 'aug') ? 4 : 3);
-	console.log(second_key)
 	var third_key = root_key + ((type == 'dim') ? 6 : 7); 
 
 	if (type == 'aug')
