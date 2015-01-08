@@ -63,7 +63,8 @@ app.post('/generate', function(req, res){
 	generate(melody, ["c9,64"], 'melody.mid');
 
 	// generates the harmony file
-	generate(melody, [req.body.harmony], 'harmony.mid');
+	var harmony = (parseChords(generateChords(melody, time)));
+	generate(melody, harmony, 'harmony.mid');
 
 	isGenerated = true; 
 	res.redirect('/');
@@ -116,7 +117,17 @@ Please use the helper function getChord(root,type) written below to do this.
 *************************************/
 function generateChords(melody, time)
 {
-	return false; 
+	var chords = [];
+	var melody1 = melody.split(' '); 
+	for (var i = 0, n = melody1.length; i < n; i++) 
+	{
+  		var note = melody1[i].split(',') [0];
+  		var duration = melody1[i].split(',') [1];
+  		//var chord = 
+  		chords.push(note + "maj," + duration);
+	}
+	console.log(chords)
+	return chords;
 }
 
 
@@ -134,7 +145,25 @@ returns that array of 3 strings
 ************************************/
 function parseChords(chords)
 {
-	return false; 
+	var track1 = [];
+	var track2 = [];
+	var track3 = [];
+	for (var i = 0, n = chords.length; i < n; i++)
+	{
+		var chord = chords[i].split(',') [0];
+  		var duration = chords[i].split(',') [1];
+  		var type = chord.substring(chord.length - 3);
+
+  		console.log(root);
+  		console.log(type);
+  		var root = chord.substring(0, chord.length - 3);
+  		var notes = getChord(root,type);
+  		track1.push(notes[0] + "," + duration);
+  		track2.push(notes[1] + "," + duration);
+  		track3.push(notes[2] + "," + duration);
+	}
+	console.log([track1.join(" "), track2.join(" "), track3.join(" ")]);
+	return [track1.join(" "), track2.join(" "), track3.join(" ")];
 }
 
 
@@ -151,18 +180,18 @@ function getChord(root, type)
 	Aug 	Root    4   Major Third     4   Augmented Fifth 
 	*/
 
-	var root_key = noteToKey[root];
+	var root_key = keyToNote[root];
 	
-	var second_key = root_key + (type == 'maj' || type == 'aug') ? 4 : 3; 
-	
-	var third_key = root_key + (type == 'dim') ? 6 : 7; 
+	var second_key = root_key + ((type == 'maj' || type == 'aug') ? 4 : 3);
+	console.log(second_key)
+	var third_key = root_key + ((type == 'dim') ? 6 : 7); 
 
 	if (type == 'aug')
 	{
 		third_key ++; 
 	} 
-
-	return [keyToNote[root_key], keyToNote[second_key], keyToNote[third_key]]; 
+console.log([noteToKey[root_key], noteToKey[second_key], noteToKey[third_key]]);
+	return [noteToKey[root_key], noteToKey[second_key], noteToKey[third_key]]; 
 }
 
 // listens at this particular port 
