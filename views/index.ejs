@@ -53,10 +53,9 @@
 		    
 		};
 
-		$( document ).ready(function() {
+		$(document).ready(function() {
 			$('#legend').children().on('click', function() {
 				$('.active').toggleClass('active');
-				console.log($(this).val());
 				duration = parseInt(this.alt, 10);
 				$(this).toggleClass('active');
 			});
@@ -64,7 +63,6 @@
 
 		function updateDisplay(){
 
-			console.log('called');
 			var html = "";
 
 			for (var i = 0; i < userInput.length; i++)
@@ -73,8 +71,9 @@
 				var duration = userInput[i].split(',')[1];
 
 				var x = Math.round((keyToNote[note] - 60)/20 * 255);
-				var color = 'rgb(' + x + ', 150,' + (255 -x ) + ')';
-				console.log(color);
+
+				var color = 'rgb(' + x + ', 150,' + (255 - x) + ')';
+
 				html += "<div class='note' style='top:" + produceHeight(note) + "%; width:" + Math.round(duration/3.0) +
 				"px; background-color:" + color + ";'> " + note + "</div>";
 
@@ -116,7 +115,7 @@
         
             MIDI.loadPlugin({
             soundfontUrl: "./soundfont/",
-            instruments: [ instrument2, instrument1],
+            instruments: [instrument2, instrument1],
             callback: function() {
 
             	// we must set the program of the tracks to the instruments we've chosen 
@@ -136,6 +135,7 @@
 				var message = data.message; // 128 is noteOff, 144 is noteOn
 				var note = data.note; // the note
 				var velocity = data.velocity; // the velocity of the note
+
 				console.log('note ' + note);
 				console.log('message ' + message);
 				if (message == 144)
@@ -143,6 +143,7 @@
 					console.log('here');
 					prev = now;
 				}
+
 				if (message == 128) {
 					console.log('now ' + now);
 					console.log('note ' + note);
@@ -289,7 +290,9 @@
 			<br/>
 
 			<div id="cool">
+				<img id="clef" src="../public/treble_clef.png"/>
 				<div id="display"> </div>
+
 				<% for (var i = 0; i < 5; i++) { %>
 				<div class="line" style="top:<%=10*i + 35%>%"></div>
 				<% } %>

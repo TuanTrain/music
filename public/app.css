@@ -24,10 +24,10 @@ button
 #midi{
     position: relative;
     width: 700px;
+    margin: auto;
 }
 
 /* for centering purposes only */
-
 #keycontainer {
     width: 100%;
     height: 240px;
@@ -140,5 +140,14 @@ img
     height: 1px;
     width: 700px;
     position: absolute;
-    border: 1px solid black
+    border: 1px solid black;
+}
+
+#clef
+{
+    height: 50%;
+    z-index: 200;
+    position: absolute;
+    top: 27.5%;
+    left: 0%
 }

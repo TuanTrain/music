@@ -168,7 +168,7 @@ function parseChords(chords)
 
 
 /* 
-Given a root note and a type of chord, getchord(root,type) returns an array of length 3 with 
+Given a root note and a type of chord, getChord(root,type) returns an array of length 3 with
 the 3 notes in the chord. Currently supports only major, minor, diminished and augmented 
 */ 
 function getChord(root, type)

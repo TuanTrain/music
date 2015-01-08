@@ -1,6 +1,10 @@
 /***********************************************************************************************
 
+ play_multi_track.js
 
+ Given a melody (a string of note,duration values) and a harmony (an array of such strings)
+ as well as a file name, the function generateMidi saves a midi file with a the given name
+ and the appropriate melody and harmony tracks.
 
 ***********************************************************************************************/
 
@@ -77,9 +81,8 @@ function generateMidi(melody, harmonies, name)
 
 		var next = harmonies[index].shift().split(',');
 
-
 		var removed = events.splice(index, 1)[0]; 
-		events.splice(index, 0, {'note': next[0], 'end_time': removed['end_time'] + parseInt(next[1], 10)})
+		events.splice(index, 0, {'note': next[0], 'end_time': removed['end_time'] + parseInt(next[1], 10)});
 
 		track.noteOff(index, removed['note'], removed['end_time'] - curr_time); 
 		console.log('noteOff(' + index + ',' + removed['note'] + ',' + (removed['end_time'] - curr_time) + ')'); 
