@@ -52,6 +52,29 @@
 		    {
 		    	playNote(notes[index]); 
 		    }
+
+			else
+			{
+				if (key_code == 37)
+				{
+					duration /= 2;
+				}
+
+				else if (key_code == 38)
+				{
+					octave ++;
+				}
+
+				else if (key_code == 39)
+				{
+					duration *=2;
+				}
+
+				else if (key_code == 40)
+				{
+					octave--; 
+				}
+			}
 		    
 		};
 
@@ -406,7 +429,7 @@
 									 />
 					<br/>
 					<input type="radio" name="harmonyType" value="byNote">Harmonize Each Note<br>
-					<input type="radio" name="harmonyType" value="byMeasure">Harmonize Each Measure
+					<input type="radio" name="harmonyType" value="byMeasure" checked>Harmonize Each Measure
 					<br/>
 					<button class = "btn btn-success" type="submit">
 						Generate Midi
@@ -423,13 +446,13 @@
 					<label>  Melody Instrument:</label>
 					<select class = "dropdown" id = 'melody_instrument'>
 						<option value="alto_sax">Antuan's Sax</option>
-						<option value="acoustic_grand_piano"> Andrew's Piano </option>
+						<option value="acoustic_grand_piano" selected> Andrew's Piano </option>
 						<option value="choir_aahs"> Evan's Voice </option>
 					</select>
 					<label> Harmony Instrument:</label>
 					<select class = "dropdown" id = 'harmony_instrument'>
 						<option value="alto_sax">Antuan's Sax</option>
-						<option value="acoustic_grand_piano"> Andrew's Piano </option>
+						<option value="acoustic_grand_piano" selected> Andrew's Piano </option>
 						<option value="choir_aahs"> Evan's Voice </option>
 					</select>
 				</div>
