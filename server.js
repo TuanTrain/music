@@ -114,29 +114,29 @@ function checkNotes(notes, chord)
 	{
 		'I': "C,E,G",
 		'i': "C,Eb,G",
-		'II': "D,Gb,A",
+		'II': "D,F,Ab",
 		'ii': "D,F,A",
 		'III': "E,Ab,B",
-		'iii': "E,G,B",
+		'iii': "Eb,G,Bb",
 		'IV': "F,A,C",
 		'iv': "F,Ab,C",
 		'V': "G,B,D",
 		'v': "G,Bb,D",
-		'VI': "A,Db,E",
+		'VI': "Ab,C,Eb",
 		'vi': "A,C,E",
-		'VII': "B,Eb,Gb",
+		'VII': "Bb,D,F",
 		'vii': "B,D,F"
 	}
 	var matches = 0;
 	var checkNotes = chordNotes[chord];
 	for (var i = 0, n = notes.length; i < n; i++)
 	{
-		if (checkNotes.indexOf(notes[i].substring(0,notes[i].length - 1)) > 0)
+		if (checkNotes.indexOf(notes[i].substring(0,notes[i].length - 1)) >= 0)
 		{
 			matches++;
 		}
 	}
-	console.log(matches);
+	console.log('matches: ' + matches);
 	return matches;
 }
 
@@ -154,9 +154,9 @@ function chooseChord(notes, prevChord, quality)
 	}
 	var chordProgMin =
 	{
-		'i': "i,i,iv,VI",
+		'i': "i,v,iv,VI",
 		'II': "II,v,iv,VI",
-		'III': "III,IV,vi",
+		'III': "III,iv,VI",
 		'iv': "iv,i,v,VI,II",
 		'v': "v,i,VI,iv",
 		'VI': "VI,v,iv,II,III",
@@ -195,8 +195,7 @@ function chooseChord(notes, prevChord, quality)
 			}
 		}
 	}
-	console.log("chosen One");
-	console.log(chosenOne);
+
 	return chosenOne;
 }
 
@@ -215,18 +214,18 @@ function generateChords(melody, time, type, quality)
 	{
 		'I': "C3maj",
 		'i': "C3min",
-		'II': "D3maj",
+		'II': "D3dim",
 		'ii': "D3min",
-		'III': "E3maj",
+		'III': "Eb3maj",
 		'iii': "E3min",
 		'IV': "F3maj",
 		'iv': "F3min",
 		'V': "G3maj",
 		'v': "G3min",
-		'VI': "A3maj",
+		'VI': "Ab3maj",
 		'vi': "A3min",
-		'VII': "B3maj",
-		'vii': "B3min"
+		'VII': "Bb3maj",
+		'vii': "B3dim"
 	}
 	var chords = [];
 	var melody1 = melody.split(' ');
@@ -256,6 +255,7 @@ function generateChords(melody, time, type, quality)
 		}
 		for (var i = 0, n = melody1.length; i < n; i++)
 		{
+			console.log('i: ' + i);
 			measureNotes.push(melody1[i].split(',') [0]);
 			notesLength += parseInt(melody1[i].split(',')[1],10);
 			if (notesLength >= measureLength)
@@ -291,7 +291,6 @@ function generateChords(melody, time, type, quality)
 			chords.push(rootChord + measureLength);
 		}
 	}
-	console.log(chords);
 	return chords;
 }
 
