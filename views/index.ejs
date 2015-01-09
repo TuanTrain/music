@@ -162,21 +162,46 @@
 				var velocity = data.velocity; // the velocity of the note
 				console.log('note ' + note);
 				console.log('message ' + message);
-				if (message == 144)
-				{
-					console.log('here');
-					prev = now;
-				}
-				if (message == 128) {
-					console.log('now ' + now);
-					console.log('note ' + note);
-					var duration = (now - prev) / 500.0 * 128;
-					console.log('duration ' + duration);
-					if (noteToKey.hasOwnProperty(note)) {
-						userInput.push(noteToKey[note] + ',' + duration);
-						console.log(userInput[userInput.length - 1]);
-						updateDisplay();
+				var note_name = noteToKey[note];
+				if (note != 120){
+					var note_oct = note_name.substring(note_name.length - 1);
+					var oct;
+					console.log(note_oct);
+					console.log(octave);
+					if (note_oct == octave.toString()) {
+							oct = 4;
+							octave = note_oct;
+						}
+						else {
+							oct = 5;
+							octave = note_oct - 1;
+						}
+					if (message == 144)
+					{
+						console.log('here');
+						prev = now;
+						console.log(note_name + " coloring");
+						console.log(note_name.substring(0, note_name.length - 1) + oct);
+						coloring(note_name.substring(0, note_name.length - 1) + oct);
 					}
+					if (message == 128) {
+						console.log('now ' + now);
+						console.log('note ' + note);
+						var duration = (now - prev) / 500.0 * 128;
+						console.log('duration ' + duration);
+						if (noteToKey.hasOwnProperty(note)) {
+							userInput.push(noteToKey[note] + ',' + duration);
+							console.log(userInput[userInput.length - 1]);
+							updateDisplay();
+						if (note_name.length == 3) {
+							offblack(note_name.substring(0, note_name.length - 1) + oct);
+						}
+						else {
+							offwhite(note_name.substring(0, note_name.length - 1) + oct);
+						}
+						}
+						}
+						octave = 4;
 				}
 			});
     	}
@@ -239,11 +264,20 @@
 		}
 
 		function coloring(obj_id) {
-			var colorstring = obj_id.substring(1) + obj_id[0];
-			document.getElementById(obj_id).style.background = getColor(colorstring);
+			var colorOctave = octave;
+			var colorstring = obj_id.substring(0, obj_id.length - 1);
+			if (obj_id.substring(obj_id.length - 1, obj_id.length) == "5")
+				colorOctave++;
+			document.getElementById(obj_id).style.background = getColor(colorstring + colorOctave);
 
 		}
 
+		function offwhite(obj_id){
+			document.getElementById(obj_id).style.background = "#F4F4F4";
+		}
+		function offblack(obj_id){
+			document.getElementById(obj_id).style.background = "#000000";
+		}
         </script>
     </head>
 
@@ -278,40 +312,40 @@
 				<div id="keyboard" class="center">
 					<div class="octave">
 						<div id="o4">
-							<div id="4C" class="key white" onmouseover = "coloring('4C')" onclick = "playNote('C')">	</div>
-							<div id="4D" class="key white" onclick = "playNote('D')">	</div>
-							<div id="4E" class="key white" onclick = "playNote('E')">	</div>
-							<div id="4F" class="key white" onclick = "playNote('F')">	</div>
-							<div id="4G" class="key white" onclick = "playNote('G')">	</div>
-							<div id="4A" class="key white" onclick = "playNote('A')">	</div>
-							<div id="4B" class="key white" onclick = "playNote('B')">	</div>
+							<div id="C4" class="key white" onmouseout = "offwhite('C4')" onmouseover = "coloring('C4')" onclick = "playNote('C')">	</div>
+							<div id="D4" class="key white" onmouseout = "offwhite('D4')" onmouseover = "coloring('D4')" onclick = "playNote('D')">	</div>
+							<div id="E4" class="key white" onmouseout = "offwhite('E4')" onmouseover = "coloring('E4')" onclick = "playNote('E')">	</div>
+							<div id="F4" class="key white" onmouseout = "offwhite('F4')" onmouseover = "coloring('F4')" onclick = "playNote('F')">	</div>
+							<div id="G4" class="key white" onmouseout = "offwhite('G4')" onmouseover = "coloring('G4')" onclick = "playNote('G')">	</div>
+							<div id="A4" class="key white" onmouseout = "offwhite('A4')" onmouseover = "coloring('A4')" onclick = "playNote('A')">	</div>
+							<div id="B4" class="key white" onmouseout = "offwhite('B4')" onmouseover = "coloring('B4')" onclick = "playNote('B')">	</div>
 						</div>
 
 						<div class="flats">
-							<div id="4Cs" class="key black" onclick = "playNote('Db')"> </div>
-							<div id="4Ds" class="key black" onclick = "playNote('Eb')"> </div>
-							<div id="4Fs" class="key black" onclick = "playNote('Gb')"> </div>
-							<div id="4Gs" class="key black" onclick = "playNote('Ab')"> </div>
-							<div id="4As" class="key black" onclick = "playNote('Bb')"> </div>
+							<div id="Db4" class="key black" onmouseout = "offblack('Db4')" onmouseover = "coloring('Db4')" onclick = "playNote('Db')"> </div>
+							<div id="Eb4" class="key black" onmouseout = "offblack('Eb4')" onmouseover = "coloring('Eb4')" onclick = "playNote('Eb')"> </div>
+							<div id="Gb4" class="key black" onmouseout = "offblack('Gb4')" onmouseover = "coloring('Gb4')" onclick = "playNote('Gb')"> </div>
+							<div id="Ab4" class="key black" onmouseout = "offblack('Ab4')" onmouseover = "coloring('Ab4')" onclick = "playNote('Ab')"> </div>
+							<div id="Bb4" class="key black" onmouseout = "offblack('Bb4')" onmouseover = "coloring('Bb4')" onclick = "playNote('Bb')"> </div>
 						</div>
 					</div>
 					<div class="octave">
 						<div id="o5">
-							<div id="5C" class="key white" onclick = "playNoteOct2('C')">	</div>
-							<div id="5D" class="key white" onclick = "playNoteOct2('D')">	</div>
-							<div id="5E" class="key white" onclick = "playNoteOct2('E')">	</div>
-							<div id="5F" class="key white" onclick = "playNoteOct2('F')">	</div>
-							<div id="5G" class="key white" onclick = "playNoteOct2('G')">	</div>
-							<div id="5A" class="key white" onclick = "playNoteOct2('A')">	</div>
-							<div id="5B" class="key white" onclick = "playNoteOct2('B')">	</div>
+							<div id="C5" class="key white" onmouseout = "offwhite('C5')" onmouseover = "coloring('C5')" onclick = "playNoteOct2('C')">	</div>
+							<div id="D5" class="key white" onmouseout = "offwhite('D5')" onmouseover = "coloring('D5')" onclick = "playNoteOct2('D')">	</div>
+							<div id="E5" class="key white" onmouseout = "offwhite('E5')" onmouseover = "coloring('E5')" onclick = "playNoteOct2('E')">	</div>
+							<div id="F5" class="key white" onmouseout = "offwhite('F5')" onmouseover = "coloring('F5')" onclick = "playNoteOct2('F')">	</div>
+							<div id="G5" class="key white" onmouseout = "offwhite('G5')" onmouseover = "coloring('G5')" onclick = "playNoteOct2('G')">	</div>
+							<div id="A5" class="key white" onmouseout = "offwhite('A5')" onmouseover = "coloring('A5')" onclick = "playNoteOct2('A')">	</div>
+							<div id="B5" class="key white" onmouseout = "offwhite('B5')" onmouseover = "coloring('B5')" onclick = "playNoteOct2('B')">	</div>
 						</div>
 
 						<div class="flats">
-							<div id="5Cs" class="key black" onclick = "playNoteOct2('Db')"> </div>
-							<div id="5Ds" class="key black" onclick = "playNoteOct2('Eb')"> </div>
-							<div id="5Fs" class="key black" onclick = "playNoteOct2('Gb')"> </div>
-							<div id="5Gs" class="key black" onclick = "playNoteOct2('Ab')"> </div>
-							<div id="5As" class="key black" onclick = "playNoteOct2('Bb')"> </div>
+							<div id="Db5" class="key black" onmouseout = "offblack('Db5')" onmouseover = "coloring('Db5')" onclick = "playNoteOct2('Db')"> </div>
+							<div id="Eb5" class="key black" onmouseout = "offblack('Eb5')" onmouseover = "coloring('Eb5')" onclick = "playNoteOct2('Eb')"> </div>
+							<div id="Gb5" class="key black" onmouseout = "offblack('Gb5')" onmouseover = "coloring('Gb5')" onclick = "playNoteOct2('Gb')"> </div>
+							<div id="Ab5" class="key black" onmouseout = "offblack('Ab5')" onmouseover = "coloring('Ab5')" onclick = "playNoteOct2('Ab')"> </div>
+							<div id="Bb5" class="key black" onmouseout = "offblack('Bb5')" onmouseover = "coloring('Bb5')" onclick = "playNoteOct2('Bb')"> </div>
 						</div>
 					</div>
 				</div>
@@ -342,33 +376,8 @@
 			<div id="midi">
 				<h1> Javascript Midi Player </h1>
 
-				<p> <b> Instructions: </b> Enter a melody in the text box below in the format and press the green Generate Midi button. Then, use the following to select an instrument and Play! </p>
-				<div id="instrument_selector">
-					<label>  Melody Instrument:</label>
-					<select class = "dropdown" id = 'melody_instrument'>
-						<option value="alto_sax">Antuan's Sax</option>
-						<option value="acoustic_grand_piano"> Andrew's Piano </option>
-						<option value="choir_aahs"> Evan's Voice </option>
-					</select>
-					<label> Harmony Instrument:</label>
-					<select class = "dropdown" id = 'harmony_instrument'>
-						<option value="alto_sax">Antuan's Sax</option>
-						<option value="acoustic_grand_piano"> Andrew's Piano </option>
-						<option value="choir_aahs"> Evan's Voice </option>
-					</select>
-				</div>
-
-				<% if (generated) { %>
-					<p> Something has been generated! Click Play! </p>
-				<% } else {%>
-					<p> Nothing has been generated yet :( </p>
-				<% } %>
-
-				<button class="btn btn-primary" onclick="playFile('melody.mid')"> Play Melody Only! </button>
-				<button class="btn btn-primary" onclick="playFile('harmony.mid')"> Play with Harmony! </button>
-
+				<p> <b> Instructions: </b> When your melody is ready, select harmony options and press the green Generate Midi button. Then, use the playback options to select your instruments and Play! </p>
 				<br/>
-
 				<p id="input" > <b>Input Format:</b> noteOctave,duration noteOctave,duration ... </p>
 				<form method="post" action="generate">
 					<label> Melody </label>
@@ -403,6 +412,31 @@
 						Generate Midi
 					</button>
 				</form>
+				<br/>
+				<% if (generated) { %>
+					<p> Something has been generated! Click Play! </p>
+				<% } else {%>
+					<p> Nothing has been generated yet :( </p>
+				<% } %>
+				<br/>
+				<div id="instrument_selector">
+					<label>  Melody Instrument:</label>
+					<select class = "dropdown" id = 'melody_instrument'>
+						<option value="alto_sax">Antuan's Sax</option>
+						<option value="acoustic_grand_piano"> Andrew's Piano </option>
+						<option value="choir_aahs"> Evan's Voice </option>
+					</select>
+					<label> Harmony Instrument:</label>
+					<select class = "dropdown" id = 'harmony_instrument'>
+						<option value="alto_sax">Antuan's Sax</option>
+						<option value="acoustic_grand_piano"> Andrew's Piano </option>
+						<option value="choir_aahs"> Evan's Voice </option>
+					</select>
+				</div>
+				<button class="btn btn-primary" onclick="playFile('melody.mid')"> Play Melody Only! </button>
+				<button class="btn btn-primary" onclick="playFile('harmony.mid')"> Play with Harmony! </button>
+
+				<br/>
 
 				<form method = "get" action="download">
 					<button  class="btn btn-danger" type="submit"> Download </button>
