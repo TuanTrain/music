@@ -60,7 +60,6 @@ app.post('/generate', function(req, res){
 	var harmonyType= req.body.harmonyType;
 	console.log(req.body.harmonyType);
 
-	console.log(melody);
 	// generates the melody file
 	generate(melody, ["c9,64"], 'melody.mid');
 
@@ -110,7 +109,8 @@ var noteToKey = {}; // 108 ==  C8
 
 function checkNotes(notes, chord)
 {
-	var chordNotes = {
+	var chordNotes =
+	{
 		'I': "C,E,G",
 		'i': "C,Eb,G",
 		'II': "D,Gb,A",
@@ -130,11 +130,12 @@ function checkNotes(notes, chord)
 	var checkNotes = chordNotes[chord];
 	for (var i = 0, n = notes.length; i < n; i++)
 	{
-		if (checkNotes.indexof(notes[i].substring(0,notes[i].length)) > 0)
+		if (checkNotes.indexOf(notes[i].substring(0,notes[i].length - 1)) > 0)
 		{
 			matches++;
 		}
 	}
+	console.log(matches);
 	return matches;
 }
 
@@ -149,14 +150,14 @@ function chooseChord(notes, prevChord)
 			'V': "V,I,vi,IV",
 			'vi': "vi,V,IV,ii,iii",
 			'vii': "vii,V,I"
-	}
+		}
 
 	var possibleChords = [];
 	var choiceChords = chordProgMaj[prevChord].split(',');
 	for (var i = 0, n = choiceChords.length; i < n; i++)
 	{
 		var curChord = choiceChords[i];
-		var matches = checkNotes(notes, curChord[i]);
+		var matches = checkNotes(notes, curChord);
 		if(matches > 0)
 		{
 			possibleChords.push(curChord + "," + matches);
@@ -164,14 +165,18 @@ function chooseChord(notes, prevChord)
 	}
 	var chosenOne = "I";
 	var matchedNotes = 0;
-	if(possibleChords) {
-		for (var i = 0, n = possibleChords.length; i < n; i++) {
-			if (possibleChords[i].split(',')[1] > matchedNotes) {
+	if(possibleChords)
+	{
+		for (var i = 0, n = possibleChords.length; i < n; i++)
+		{
+			if (possibleChords[i].split(',')[1] > matchedNotes)
+			{
 				chosenOne = possibleChords[i].split(',')[0];
 				matchedNotes = possibleChords[i].split(',')[1];
 			}
 		}
 	}
+	console.log("chosen One");
 	console.log(chosenOne);
 	return chosenOne;
 }
@@ -187,7 +192,8 @@ Please use the helper function getChord(root,type) written below to do this.
 *************************************/
 function generateChords(melody, time, type)
 {
-	var chordFromRoman = {
+	var chordFromRoman =
+	{
 		'I': "C3maj",
 		'i': "C3min",
 		'II': "D3maj",
@@ -207,7 +213,8 @@ function generateChords(melody, time, type)
 	var melody1 = melody.split(' ');
 	if(type == "byNote")
 	{
-		for (var i = 0, n = melody1.length; i < n; i++) {
+		for (var i = 0, n = melody1.length; i < n; i++)
+		{
 			var note = melody1[i].split(',') [0];
 			var duration = melody1[i].split(',') [1];
 			chords.push(note + "maj," + duration);
@@ -221,28 +228,32 @@ function generateChords(melody, time, type)
 		var measureNotes = [];
 		var prevChord = "I";
 		var nextChord = "I";
-		for (var i = 0, n = melody1.length; i < n; i++) {
+		for (var i = 0, n = melody1.length; i < n; i++)
+		{
 			measureNotes.push(melody1[i].split(',') [0]);
-			notesLength += melody1[i].split(',') [1];
-			if (notesLength >= measureLength || i == (n-1))
+			notesLength += parseInt(melody1[i].split(',')[1],10);
+			if (notesLength >= measureLength)
 			{
-				if (firstMeasure == true) {
-					chords.push("c3maj," + measureLength);
+				if (firstMeasure == true)
+				{
+					chords.push("C3maj," + measureLength);
 					firstMeasure = false;
 				}
-				else {
-					console.log(nextChord);
+				else
+				{
 					nextChord = chooseChord(measureNotes, prevChord);
 					chords.push(chordFromRoman[nextChord] + "," + measureLength);
 					prevChord = nextChord;
 				}
+
+				measureNotes = [];
+				if (notesLength > measureLength)
+				{
+					measureNotes.push(melody1[i].split(',') [0]);
+				}
+				notesLength -= measureLength;
+
 			}
-			measureNotes = [];
-			if (notesLength > measureLength)
-			{
-				measureNotes.push(melody1[i].split(',') [0]);
-			}
-			notesLength = 0;
 		}
 	}
 	console.log(chords);
