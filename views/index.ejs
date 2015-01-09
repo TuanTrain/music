@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html style="margin:10px" xmlns="http://www.w3.org/1999/html">
+<html style="margin:10px" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
     <head>
 
 		<title> Musical Harmonizer </title>
@@ -238,32 +238,12 @@
 			octave--;
 		}
 
-		$(document).ready = function(){$(".key").mouseenter(coloring)};
-		$(document).ready = function(){$(".white").mouseleave(mouseoffwhite)};
-		$(document).ready = function(){$(".black").mouseleave(mouseoffblack)};		
+		function coloring(obj_id) {
+			var colorstring = obj_id.substring(1) + obj_id[0];
+			document.getElementById(obj_id).style.background = getColor(colorstring);
 
-		function coloring() {
-			console.log($(this));
-			console.log(this);
-			console.log(this.id);
-			var obj_id = this.id;
-			console.log(obj_id);
-			var end = obj_id.length - 1;
-			var colorOctave = octave;
-			console.log(obj_id[end]);
-			if (obj_id[end] == '5')
-				colorOctave++;
-
-			var colorString = obj_id.substring(0, end) + colorOctave;
-			$(this).style.background = getColor(colorString);
 		}
 
-		function mouseoffwhite(){
-			$(this).css('background', '#F4F4F4');
-		}
-		function mouseoffblack(){
-			$(this).css('background', '#000000');
-		}
         </script>
     </head>
 
@@ -298,40 +278,40 @@
 				<div id="keyboard" class="center">
 					<div class="octave">
 						<div id="o4">
-							<div id="C4" class="key white"  onclick = "playNote('C')"  onmouseout="mouseoffwhite()"  onmouseover = "coloring()">	</div>
-							<div id="D4" class="key white" onclick = "playNote('D')"  onmouseout="mouseoffwhite()"  onmouseover = "coloring()">	</div>
-							<div id="E4" class="key white" onclick = "playNote('E')">	</div>
-							<div id="F4" class="key white" onclick = "playNote('F')">	</div>
-							<div id="G4" class="key white" onclick = "playNote('G')">	</div>
-							<div id="A4" class="key white" onclick = "playNote('A')">	</div>
-							<div id="B4" class="key white" onclick = "playNote('B')">	</div>
+							<div id="4C" class="key white" onmouseover = "coloring('4C')" onclick = "playNote('C')">	</div>
+							<div id="4D" class="key white" onclick = "playNote('D')">	</div>
+							<div id="4E" class="key white" onclick = "playNote('E')">	</div>
+							<div id="4F" class="key white" onclick = "playNote('F')">	</div>
+							<div id="4G" class="key white" onclick = "playNote('G')">	</div>
+							<div id="4A" class="key white" onclick = "playNote('A')">	</div>
+							<div id="4B" class="key white" onclick = "playNote('B')">	</div>
 						</div>
 
 						<div class="flats">
-							<div id="Db4" class="key black" onclick = "playNote('Db')"> </div>
-							<div id="Eb4" class="key black" onclick = "playNote('Eb')"> </div>
-							<div id="Gb4" class="key black" onclick = "playNote('Gb')"> </div>
-							<div id="Ab4" class="key black" onclick = "playNote('Ab')"> </div>
-							<div id="Bb4" class="key black" onclick = "playNote('Bb')"> </div>
+							<div id="4Cs" class="key black" onclick = "playNote('Db')"> </div>
+							<div id="4Ds" class="key black" onclick = "playNote('Eb')"> </div>
+							<div id="4Fs" class="key black" onclick = "playNote('Gb')"> </div>
+							<div id="4Gs" class="key black" onclick = "playNote('Ab')"> </div>
+							<div id="4As" class="key black" onclick = "playNote('Bb')"> </div>
 						</div>
 					</div>
 					<div class="octave">
-						<div id="o5" onmouseout="mouseoffwhite()">
-							<div id="C5" class="key white" onclick = "playNoteOct2('C')">	</div>
-							<div id="D5" class="key white" onclick = "playNoteOct2('D')">	</div>
-							<div id="E5" class="key white" onclick = "playNoteOct2('E')">	</div>
-							<div id="F5" class="key white" onclick = "playNoteOct2('F')">	</div>
-							<div id="G5" class="key white" onclick = "playNoteOct2('G')">	</div>
-							<div id="A5" class="key white" onclick = "playNoteOct2('A')">	</div>
-							<div id="B5" class="key white" onclick = "playNoteOct2('B')">	</div>
+						<div id="o5">
+							<div id="5C" class="key white" onclick = "playNoteOct2('C')">	</div>
+							<div id="5D" class="key white" onclick = "playNoteOct2('D')">	</div>
+							<div id="5E" class="key white" onclick = "playNoteOct2('E')">	</div>
+							<div id="5F" class="key white" onclick = "playNoteOct2('F')">	</div>
+							<div id="5G" class="key white" onclick = "playNoteOct2('G')">	</div>
+							<div id="5A" class="key white" onclick = "playNoteOct2('A')">	</div>
+							<div id="5B" class="key white" onclick = "playNoteOct2('B')">	</div>
 						</div>
 
-						<div class="flats" onmouseout = "mouseoffblack()">
-							<div id="Db5" class="key black" onclick = "playNoteOct2('Db')"> </div>
-							<div id="Eb5" class="key black" onclick = "playNoteOct2('Eb')"> </div>
-							<div id="Gb5" class="key black" onclick = "playNoteOct2('Gb')"> </div>
-							<div id="Ab5" class="key black" onclick = "playNoteOct2('Ab')"> </div>
-							<div id="Bb5" class="key black" onclick = "playNoteOct2('Bb')"> </div>
+						<div class="flats">
+							<div id="5Cs" class="key black" onclick = "playNoteOct2('Db')"> </div>
+							<div id="5Ds" class="key black" onclick = "playNoteOct2('Eb')"> </div>
+							<div id="5Fs" class="key black" onclick = "playNoteOct2('Gb')"> </div>
+							<div id="5Gs" class="key black" onclick = "playNoteOct2('Ab')"> </div>
+							<div id="5As" class="key black" onclick = "playNoteOct2('Bb')"> </div>
 						</div>
 					</div>
 				</div>
