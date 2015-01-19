@@ -434,6 +434,7 @@
 					<br/>
 					<input type="radio" name="chordQuality" value="maj" checked>Major<br>
 					<input type="radio" name="chordQuality" value="min">Minor<br></input>
+					<input type="number" name="transpose" value="0">Transpose</input>
 					<button class = "btn btn-success" type="submit">
 						Generate Midi
 					</button>
@@ -459,6 +460,7 @@
 						<option value="choir_aahs"> Evan's Voice </option>
 					</select>
 				</div>
+
 				<button class="btn btn-primary" onclick="playFile('melody.mid')"> Play Melody Only! </button>
 				<button class="btn btn-primary" onclick="playFile('harmony.mid')"> Play with Harmony! </button>
 

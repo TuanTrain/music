@@ -55,17 +55,27 @@ app.post('/generate', function(req, res){
 
 	 generate(req.body.pattern, harmony);
 	 */
-	var melody = req.body.pattern;
+	var melody1 = req.body.pattern;
 	var time = parseInt(req.body.time, 10);
 	var harmonyType = req.body.harmonyType;
 	var chordQuality = req.body.chordQuality;
+	// input transpose
+	var stept = parseInt(req.body.transpose, 10);
+
+	var melody = transposeNotes(melody1, stept);
 	console.log(req.body.harmonyType);
+	// steps of this key from C
+	var step = findKey(melody, chordQuality);
+	melody = transposeNotes(melody, -step);
+	console.log("step!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + step);
+
+
+	// generates the harmony file
+	var harmony = (parseChords(transposeChord(generateChords(melody, time,harmonyType,chordQuality), step)));
+	melody = transposeNotes(melody, step);
 
 	// generates the melody file
 	generate(melody, ["c9,64"], 'melody.mid');
-
-	// generates the harmony file
-	var harmony = (parseChords(generateChords(melody, time,harmonyType,chordQuality)));
 	generate(melody, harmony, 'harmony.mid');
 
 	isGenerated = true;
@@ -136,7 +146,7 @@ function checkNotes(notes, chord)
 			matches++;
 		}
 	}
-	console.log('matches: ' + matches);
+
 	return matches;
 }
 
@@ -266,7 +276,6 @@ function generateChords(melody, time, type, quality)
 		}
 		for (var i = 0, n = melody1.length; i < n; i++)
 		{
-			console.log('i: ' + i);
 			measureNotes.push(melody1[i].split(',') [0]);
 			notesLength += parseInt(melody1[i].split(',')[1],10);
 			if (notesLength >= measureLength)
@@ -302,6 +311,7 @@ function generateChords(melody, time, type, quality)
 			chords.push(rootChord + measureLength);
 		}
 	}
+	console.log("chord output: " + chords);
 	return chords;
 }
 
@@ -363,6 +373,122 @@ function getChord(root, type)
 	}
 	console.log([noteToKey[root_key], noteToKey[second_key], noteToKey[third_key]]);
 	return [noteToKey[root_key], noteToKey[second_key], noteToKey[third_key]];
+}
+
+function findKey (melody, quality)
+{
+	var note2num = {'C': 0, 'Db': 1, 'D': 2, 'Eb': 3, 'E': 4, 'F': 5, 'Gb': 6, 'G': 7, 'Ab': 8, 'A': 9, 'Bb': 10, 'B': 11};
+	var count = [0,0,0,0,0,0,0,0,0,0,0,0];
+	var key;
+	if (quality == "maj")
+	{
+		key = [0,2,4,5,7,9,11];
+	}
+	if (quality == "min")
+	{
+		key = [0,2,3,5,7,8,10]
+	}
+
+	melody = melody.split(" ");
+	console.log("melody " + melody);
+	for (var i = 0, n = melody.length; i < n; i++)
+	{
+		var note = melody[i].split(",")[0];
+		note = note.substring(0, note.length - 1);
+		var index = note2num[note];
+		count[index]++;
+	}
+
+	console.log("count: " + count);
+
+	var chosenKey = 0;
+	var maxMatch = 0;
+	var amount;
+	// go through 12 keys
+	for (var i = 0; i < 12; i++)
+	{
+		amount = 0;
+
+		// add up amount of keys that fit
+		for (var j = 0; j < 7; j++)
+		{
+			// root note counts thrice
+			if (j == 0)
+			{
+				amount += count[key[j]] * 2;
+			}
+
+			amount += count[key[j]];
+		}
+
+		// if best fit so far, replace chosen
+		if (amount > maxMatch)
+		{
+			chosenKey = i;
+			maxMatch = amount;
+		}
+		console.log("amount matched " + i + "   " + amount);
+		// update for next key to check
+		for(var j = 0; j < 7; j++)
+		{
+			key[j] = (key[j] + 1) % 12;
+		}
+	}
+
+	return chosenKey;
+
+}
+
+function transposeNotes(melody, step)
+{
+	melody = melody.split(" ");
+	var transposed = [];
+	var len = melody.length;
+	var note2num = {'C': 0, 'Db': 1, 'D': 2, 'Eb': 3, 'E': 4, 'F': 5, 'Gb': 6, 'G': 7, 'Ab': 8, 'A': 9, 'Bb': 10, 'B': 11};
+	var notes = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+	for(var i = 0; i < len; i++)
+	{
+		var noteInfo = melody[i].split(",")[0];
+		var note = noteInfo.substring(0, noteInfo.length - 1);
+		var octave = noteInfo.substring(noteInfo.length - 1);
+		var duration = melody[i].split(",")[1];
+		var newNote = parseInt(note2num[note],10) + step;
+		if (newNote > 11)
+		{
+			octave++;
+		}
+		if (newNote < 0)
+		{
+			octave--;
+			newNote += 12;
+		}
+		transposed.push(notes[newNote%12] + octave + ',' + duration);
+	}
+	transposed = transposed.join(" ");
+	console.log("transposed:  " + transposed);
+	return transposed;
+}
+
+
+
+function transposeChord(chords, step)
+{
+	var transposed = [];
+	var len = chords.length;
+	var note2num = {'C': 0, 'Db': 1, 'D': 2, 'Eb': 3, 'E': 4, 'F': 5, 'Gb': 6, 'G': 7, 'Ab': 8, 'A': 9, 'Bb': 10, 'B': 11};
+	var notes = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+	for(var i = 0; i < len; i++)
+	{
+		var chordInfo = chords[i].split(",")[0];
+		var chord = chordInfo.substring(0, chordInfo.length - 4);
+		var type = chordInfo.substring(chordInfo.length - 3);
+		var duration = chords[i].split(",")[1];
+		var newChord = parseInt(note2num[chord],10) + step;
+		transposed.push(notes[newChord%12] + '3' + type + ',' + duration);
+	}
+	//transposed = transposed.join(" ");
+	console.log("chords !!! : " + transposed);
+	return transposed;
 }
 
 // listens at this particular port 
