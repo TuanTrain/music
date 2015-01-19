@@ -154,23 +154,23 @@ function chooseChord(notes, prevChord, quality)
 {
 	var chordProgMaj =
 	{
-		'I': "I,V,IV,vi",
-		'ii': "ii,V,IV,vi",
-		'iii': "iii,IV,vi",
-		'IV': "IV,I,V,vi,ii",
-		'V': "V,I,vi,IV",
-		'vi': "vi,V,IV,ii,iii",
-		'vii': "vii,V,I"
+		'I': "I,V,IV,vi,ii,iii,vii",
+		'ii': "ii,V,IV,vi,I,iii,vii",
+		'iii': "iii,IV,vi,I,ii,V,vii",
+		'IV': "IV,I,V,vi,ii,iii,vii",
+		'V': "V,I,vi,IV,ii,iii,vii",
+		'vi': "vi,V,IV,ii,iii,I,vii",
+		'vii': "vii,V,I,V,vi,ii,iii,IV"
 	}
 	var chordProgMin =
 	{
-		'i': "i,v,iv,VI",
-		'II': "II,v,iv,VI",
-		'III': "III,iv,VI",
-		'iv': "iv,i,v,VI,II",
-		'v': "v,i,VI,iv",
-		'VI': "VI,v,iv,II,III",
-		'VII': "VII,v,i"
+		'i': "i,v,iv,VI,II,III,VII",
+		'II': "II,v,iv,VI,i,III,VII",
+		'III': "III,iv,VI,i,II,v,VII",
+		'iv': "iv,i,v,VI,II,III,VII",
+		'v': "v,i,VI,iv,II,III,VII",
+		'VI': "VI,v,iv,II,III,i,VII",
+		'VII': "VII,v,i,v,VI,II,III,iv"
 	}
 
 	var possibleChords = [];
@@ -415,7 +415,7 @@ function findKey (melody, quality)
 			// root note counts thrice
 			if (j == 0)
 			{
-				amount += count[key[j]] * 2;
+				amount += count[key[j]];
 			}
 
 			amount += count[key[j]];
