@@ -59,6 +59,7 @@ app.post('/generate', function(req, res){
 	var time = parseInt(req.body.time, 10);
 	var harmonyType = req.body.harmonyType;
 	var chordQuality = req.body.chordQuality;
+	var harmonySubtype = req.body.harmonySubtype;
 	// input transpose
 	var stept = parseInt(req.body.transpose, 10);
 
@@ -71,7 +72,7 @@ app.post('/generate', function(req, res){
 
 
 	// generates the harmony file
-	var harmony = (parseChords(transposeChord(generateChords(melody, time,harmonyType,chordQuality), step)));
+	var harmony = (parseChords(transposeChord(generateChords(melody, time,harmonyType,chordQuality), step),harmonySubtype,time));
 	melody = transposeNotes(melody, step);
 
 	// generates the melody file
@@ -154,23 +155,23 @@ function chooseChord(notes, prevChord, quality)
 {
 	var chordProgMaj =
 	{
-		'I': "I,V,IV,vi,ii,iii,vii",
-		'ii': "ii,V,IV,vi,I,iii,vii",
-		'iii': "iii,IV,vi,I,ii,V,vii",
-		'IV': "IV,I,V,vi,ii,iii,vii",
-		'V': "V,I,vi,IV,ii,iii,vii",
-		'vi': "vi,V,IV,ii,iii,I,vii",
-		'vii': "vii,V,I,V,vi,ii,iii,IV"
+		'I': "V,IV,vi,ii,iii,vii,I",
+		'ii': "V,IV,vi,I,iii,vii,ii",
+		'iii': "IV,vi,I,ii,V,vii,iii",
+		'IV': "I,V,vi,ii,iii,vii,IV",
+		'V': "I,vi,IV,ii,iii,vii,V",
+		'vi': "V,IV,ii,iii,I,vii,vi",
+		'vii': "V,I,V,vi,ii,iii,IV,vii"
 	}
 	var chordProgMin =
 	{
-		'i': "i,v,iv,VI,II,III,VII",
-		'II': "II,v,iv,VI,i,III,VII",
-		'III': "III,iv,VI,i,II,v,VII",
-		'iv': "iv,i,v,VI,II,III,VII",
-		'v': "v,i,VI,iv,II,III,VII",
-		'VI': "VI,v,iv,II,III,i,VII",
-		'VII': "VII,v,i,v,VI,II,III,iv"
+		'i': "v,iv,VI,II,III,VII,i",
+		'II': "v,iv,VI,i,III,VII,II",
+		'III': "iv,VI,i,II,v,VII,III",
+		'iv': "iv,i,v,VI,II,III,VII,iv",
+		'v': "i,VI,iv,II,III,VII,v",
+		'VI': "v,iv,II,III,i,VII,VI",
+		'VII': "v,i,v,VI,II,III,iv,VII"
 	}
 
 	var possibleChords = [];
@@ -328,24 +329,53 @@ function generateChords(melody, time, type, quality)
 
  returns that array of 3 strings
  ************************************/
-function parseChords(chords)
+function parseChords(chords, type, time)
 {
-	var track1 = [];
-	var track2 = [];
-	var track3 = [];
-	for (var i = 0, n = chords.length; i < n; i++)
-	{
-		var chord = chords[i].split(',') [0];
-		var duration = chords[i].split(',') [1];
-		var type = chord.substring(chord.length - 3);
-		var root = chord.substring(0, chord.length - 3);
-		var notes = getChord(root,type);
-		track1.push(notes[0] + "," + duration);
-		track2.push(notes[1] + "," + duration);
-		track3.push(notes[2] + "," + duration);
+	console.log("BRO");
+	if (type == "chord") {
+		var track1 = [];
+		var track2 = [];
+		var track3 = [];
+		for (var i = 0, n = chords.length; i < n; i++) {
+			var chord = chords[i].split(',') [0];
+			var duration = chords[i].split(',') [1];
+			var type = chord.substring(chord.length - 3);
+			var root = chord.substring(0, chord.length - 3);
+			var notes = getChord(root, type);
+			track1.push(notes[0] + "," + duration);
+			track2.push(notes[1] + "," + duration);
+			track3.push(notes[2] + "," + duration);
+		}
+		console.log([track1.join(" "), track2.join(" "), track3.join(" ")]);
+		return [track1.join(" "), track2.join(" "), track3.join(" ")];
 	}
-	console.log([track1.join(" "), track2.join(" "), track3.join(" ")]);
-	return [track1.join(" "), track2.join(" "), track3.join(" ")];
+	else if (type == "waltz")
+	{
+		var track = [];
+		for (var i = 0, n = chords.length; i < n; i++)
+		{
+			var chord = chords[i].split(',') [0];
+			var duration = chords[i].split(',') [1];
+			var type = chord.substring(chord.length - 3);
+			var root = chord.substring(0, chord.length - 3);
+			var notes = getChord(root, type);
+			var length = duration / time;
+			console.log("duration   " + duration);
+			console.log("length    " + length);
+			track.push(notes[0] + "," + length);
+			track.push(notes[1] + "," + length);
+			if (time > 2)
+			{
+				track.push(notes[2] + "," + length);
+			}
+			if (time > 3)
+			{
+				track.push(notes[1] + "," + length);
+			}
+		}
+		console.log("wut " + track);
+		return [track.join(" ")];
+	}
 }
 
 
