@@ -1,6 +1,6 @@
 Musical Harmonizer 
 =====
-Source code for <a href = 'http://www.tumo.org/en/upcoming-events/1384-coding-music-with-the-harvard-boys'> Workshop at Tumo Center for Creative Technologies  </a> in Yerevan, Armenia. 
+Source code for <a href = 'http://www.tumo.org/en/news/1443-students-present-results-of-music-coding-workshop'> Workshop at Tumo Center for Creative Technologies  </a> in Yerevan, Armenia. 
 
 <h2> Entering Notes </h2>
 ![Alt text](http://oi59.tinypic.com/a2sm01.jpg)
